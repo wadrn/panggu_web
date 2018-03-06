@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_f83ufp3l4ecanhfr.css">
+  </head>
+  <body>
+      <div class="_main">
+          <div id="_nav"></div>
+          <div class="search_div" id="_searchdata" style="position: absolute;left:140px;"></div>
+          <div class="_main_con_5" id="_data_con">
+
+            <div class="pd20">
+
+                <div class="mb20">
+                    <h4 class="v h bbottom">
+                        <span class="titile" id="_r_title"></span>
+                        <ul class="v breadnav1" id="_r_bnav">
+                            <li><a href="#">首页</a></li>
+                            <li>编译管理</li>
+                        </ul>
+                    </h4>
+                </div>
+
+                <div class="search_div">
+                    <a href="javascript:;" class="step v btn blue">选择模型</a> <span style="line-height: 30px; margin: 0 10px;">-></span>
+                    <a href="javascript:;" class="step v btn ">确定编译模型</a>  <span style="line-height: 30px; margin: 0 10px;">-></span>
+                    <a href="javascript:;" class="step v btn ">填写编译任务详情</a>
+                </div>
+                <div class="step_panel">
+                    <div class="oz bgpd15" style="margin-bottom: 1px;">
+                        <span id="status_id"></span>
+                        <span style="float: right">
+                            <a href="index.html"  class="v btn" style="margin-right: 10px;">取消</a>
+                            <a href="javascript:;" class="v btn blue" onclick="step_next()">下一步</a>
+                        </span>
+                    </div>
+                    <div class="bgpd15" id="_data_list"></div>
+                </div>
+                <div class="step_panel" style="display: none;">
+                    <div class="oz bgpd15" style="margin-bottom: 1px;">
+                        <span style="float: right">
+                            <a href="index.html"  class="v btn" style="margin-right: 10px;">取消</a>
+                            <a href="javascript:;" class="v btn blue" onclick="step_prev()">上一步</a>
+                            <a href="javascript:;" class="v btn blue" onclick="step_next()">下一步</a>
+                        </span>
+                    </div>
+                    <div class="bgpd15" id="_data_list_2"></div>
+                </div>
+                <div class="step_panel" style="display: none;">
+                    <div class="oz bgpd15" style="margin-bottom: 1px;">
+                        <span style="float: right">
+                            <a href="index.html"  class="v btn" style="margin-right: 10px;">取消</a>
+                            <a href="javascript:;" class="v btn blue" onclick="step_prev()">上一步</a>
+                        </span>
+                    </div>
+                    <div class="bgpd15" id="_data_list_1">
+                        <div style="width: 600px; margin: 0 auto;">
+                            <div class="v input_2 mb10">
+                                <label class="w30">编译任务名称</label>
+                                <input type="text" name="name" class="text w70" value="">
+                                <p class="info pdw30"></p>
+                            </div>
+                            <div class="v input_2 mb10">
+                                <label class="w30">编译任务描述</label>
+                                <textarea name="desc" class="w70" value="" style="height: 80px;"></textarea>
+                                <p class="info pdw30"></p>
+                            </div>
+                            <div class="v input_2 mb10">
+                                <label class="w30"></label>
+                                <a href="javascript:;" class="v btn blue" >确定</a>
+                                <a href="javascript:;" class="v btn red" >取消</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+          </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="../js/requirefile.js"></script>
+  <script type="text/javascript">
+
+      shownav({
+          oname:'训练',
+          tname:'编译管理'
+      })
+      var _sel_model_data = {}
+      var d_form = data_form()
+      d_form.data = [
+          {
+              desc:'模型名称',
+              type:"text",
+              name:"task_name",
+              value:'',
+              ph:'',
+          },
+          {
+              desc:'search',
+              type:"sbtn",
+              text:'搜索',
+              fun:'searchdata()',
+              name:"task_data",
+              value:'',
+              ph:'',
+          }
+      ]
+      d_form.datahtml('_searchdata')
+
+
+      var obj = {
+          url:interface.model.list,
+          domid:'_data_list',
+          data:{flag:0},
+          title:[
+              {
+                title_callback:function(status){
+                  return '<input type="checkbox" class="compile_sel_mode" value="all"/>全选';
+                },
+                callback:function(data,status){
+                        return '<input type="checkbox" class="compile_sel_mode" value="'+data+'"/>'
+                },
+                style:'width:50px;'
+              },
+              {
+                  title:'模型名称',
+                  callback:function(data){
+                      return '<span><a href="add_train.html?id='+data[1]+'">'+data[0]+'</a></span>'
+                  }
+              },
+              {
+                  title:'模型类型',
+                  callback:function(data){
+                      return '<span>'+g_status_mode[data]+'</span>'
+                  }
+              },
+              {
+                  title:'ap值',
+                  callback:function(data){
+                      return data
+                  }
+              },
+              {
+                  title:'模型性能',
+                  callback:function(data){
+                      return data
+                  }
+              },
+              {
+                  title:'模型配置',
+                  callback:function(data){
+                      return data
+                  }
+              }
+          ],
+          datakey:[
+              'id',
+              ["model_name","Id"],
+              "model_type",
+              "ap",
+              "epoch",
+              "id"
+          ],
+          isstatus:{
+              cur:0,
+              domid:'status_id',
+              data:[
+                  {
+                      status:0,
+                      text:'全部模型'
+                  },
+                  {
+                      status:1,
+                      text:'收藏模型'
+                  }
+              ]
+          }
+      }
+      var _list = datalist(obj)
+
+      function step_next(){
+          var cur;
+          var steps = document.getElementsByClassName('step');
+          var step_panels = document.getElementsByClassName('step_panel');
+          for(var i=0;i<steps.length;i++){
+              if(Class.hasClass(steps[i],'blue')){
+                  Class.removeClass(steps[i],'blue');
+                  step_panels[i].style.display = 'none';
+                  cur =i;
+                  break;
+              }
+          }
+          cur++;
+          Class.addClass(steps[cur],'blue');
+          step_panels[cur].style.display = 'block';
+      }
+      function step_prev(){
+          var cur;
+          var steps = document.getElementsByClassName('step');
+          var step_panels = document.getElementsByClassName('step_panel');
+          for(var i=0;i<steps.length;i++){
+              if(Class.hasClass(steps[i],'blue')){
+                  Class.removeClass(steps[i],'blue');
+                  step_panels[i].style.display = 'none';
+                  cur =i;
+                  break;
+              }
+          }
+          cur--;
+          Class.addClass(steps[cur],'blue');
+          step_panels[cur].style.display = 'block';
+      }
+
+      function searchdata(){
+          var task_name = document.getElementsByName('task_name')[0].value
+          if(task_name) _list.data.task_key = task_name
+
+          var task_data = document.getElementsByName('task_data')[0].value
+          if(task_data) _list.data.task_key = task_data
+
+          _list.page = 1
+          _list.ajaxpagedata()
+      }
+
+      function show_train_time(){
+          var popup = tool_popup()
+          popup.title = '训练时间'
+          popup.con = '<div id="train_time">'+'</div>'
+          var html = '';
+          popup.show();
+      }
+      function show_train_data(){
+          var popup = tool_popup()
+          popup.title = '数据'
+          popup.con = '<div id="train_data">'+'</div>'
+          var html = '';
+          popup.show();
+      }
+      // 配置
+      function train_config(dom){
+          var id = dom.getAttribute('d-id')
+          getiddata(id,function(data){
+              var popup = tool_popup()
+              popup.title = '训练配置'
+              popup.con = '<div id="train_data">'+g_task_config_html('数据配置',data.data.Data_config)+g_task_config_html('模型配置',data.data.Model_config)+'</div>'
+              popup.show();
+          })
+      }
+
+      function copy_task(dom){
+          var id = dom.getAttribute('d-id')
+          var text = dom.innerText
+          getiddata(id,function(data){
+              g_add_task(data.data.Task_name+'-'+text+'-'+g_time())
+          })
+      }
+
+
+
+      function getiddata(id,callback){
+          var data = 'task_id='+id+'&offset=0'
+          ajaxpost(interface.train.search,data,function(data){
+              if(data.error ==0){
+                  callback(data)
+              }else{
+                  alert(data.msg)
+              }
+          })
+      }
+
+      function start_task(dom){
+          var id = dom.getAttribute('d-id')
+          g_start_task(id,function(){
+              _list.ajaxpagedata()
+          })
+      }
+
+      $('body').on('change','.compile_sel_mode',function(){
+          var id = parseInt($(this).val())
+          if($(this).val() == 'all'){
+              if($(this).is(":checked")){
+                  $('.compile_sel_mode').attr('checked',true)
+                  $('.compile_sel_mode').each(function(){
+                      var id = parseInt($(this).val())
+                      if(id){
+                          _sel_model_data[id] = true
+                      }
+                  })
+              }else{
+                  $('.compile_sel_mode').attr('checked',false)
+                  var id = parseInt($(this).val())
+                  if(id){
+                      delete _sel_model_data[id]
+                  }
+              }
+          }else{
+              if($(this).is(":checked")){
+                  _sel_model_data[id] = true
+              }else{
+                  delete _sel_model_data[id]
+              }
+          }
+      })
+
+
+
+
+  </script>
+
+</html>

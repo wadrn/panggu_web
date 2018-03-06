@@ -1,0 +1,80 @@
+{
+  "data": [
+    {
+      "series": [
+        {
+          "data": [
+            645,
+            684,
+            707,
+            782,
+            819,
+            824,
+            826
+          ],
+          "name": "fp_overlap",
+          "type": "column",
+          "yAxis": 0
+        },
+        {
+          "data": [
+            123,
+            117,
+            100,
+            36,
+            7,
+            3,
+            1
+          ],
+          "name": "tp_overlap",
+          "type": "column",
+          "yAxis": 1
+        },
+        {
+          "data": [
+            4,
+            10,
+            27,
+            91,
+            120,
+            124,
+            126
+          ],
+          "name": "miss_overlap",
+          "type": "column",
+          "yAxis": 2
+        },
+        {
+          "data": [
+            0.8026069662380186,
+            0.7606527912308935,
+            0.6219157692442702,
+            0.10685628269119073,
+            0.005129330146651308,
+            0.001635925646274605,
+            0.00010786322942494122
+          ],
+          "name": "ap_overlap",
+          "type": "",
+          "yAxis": 3
+        }
+      ],
+      "title": "Iou_tp_fp_miss_distributiondouble",
+      "type": "double",
+      "xAxis": {
+        "name": "overlap",
+        "series": [
+          0,
+          0.3,
+          0.5,
+          0.7,
+          0.8,
+          0.85,
+          0.9
+        ]
+      }
+    }
+  ],
+  "error": "0",
+  "msg": "success"
+}

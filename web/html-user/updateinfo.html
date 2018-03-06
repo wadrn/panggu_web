@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+
+    <div class="_main_con_5">
+
+        <div class="pd20">
+
+            <!--<div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile">个人中心</span>
+                    <ul class="v breadnav1">
+                        <li><a href="#">首页</a></li>
+                        <li>个人中心</li>
+                    </ul>
+                </h4>
+            </div>-->
+			<div style="padding: 10px 0px 10px 3px;">
+                    密码设置
+            </div>
+            <div class="bgpd15" id="_data_list">
+                <div style="width: 40%; padding-left: 3%;padding-top: 20px;" class="updateinfo_list">
+					 <div class="v input_2 mb10">
+						<label class="w30">当前密码</label>
+						<input type="password" name="old_password" class="text w70" value="" onblur="isOldEmpty()">
+                         <p class="updateinfo_error_tooltip" style="left: 150px;"></p>
+					</div>
+
+                    <div class="v input_2 mb10">
+                        <label class="w30">新密码</label>
+                        <input type="password" name="password" class="text w70" value="" onblur="isPassC()">
+                        <p class="updateinfo_error_tooltip" style="left: 150px;"></p>
+                    </div>
+
+                    <div class="v input_2 mb10" style="margin-bottom: 30px;">
+                        <label class="w30">确认密码</label>
+                        <input type="password" name="password2" class="text w70" value="" onblur="isSame()">
+                        <p class="updateinfo_error_tooltip" style="left: 150px;"></p>
+                    </div>
+
+                </div>
+            </div>
+			<div class="v input_2 mb10" style="text-align: center;margin-top: 10px;"><a href="javascript:;" class="v btn blue" style="border-radius: 5px;padding: 10px;" onclick="save_info()">修改密码</a></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+    shownav({
+        ishide:true
+    })
+    function isOldEmpty(){
+        var oldpassword = document.getElementsByName('old_password')[0].value;
+        if(oldpassword==''){
+            document.getElementsByName('old_password')[0].style.border='red solid 1px'
+            $('input[name="old_password"] + .updateinfo_error_tooltip').html('当前密码不能为空')
+            $('input[name="old_password"] + .updateinfo_error_tooltip').css('display','block');
+            return false;
+        }else{
+            document.getElementsByName('old_password')[0].style.border='#ccc solid 1px'
+            $('input[name="old_password"] + .updateinfo_error_tooltip').html('')
+            $('input[name="old_password"] + .updateinfo_error_tooltip').css('display','none');
+            return true;
+        }
+    }
+    function isPassC(){
+        var password = document.getElementsByName('password')[0].value;
+        if(password == ''){
+            document.getElementsByName('password')[0].style.border='red solid 1px'
+            $('input[name="password"] + .updateinfo_error_tooltip').html('密码不能为空')
+            $('input[name="password"] + .updateinfo_error_tooltip').css('display','block');
+            return false;
+        }else if(password.length <6 || password.length >20){
+            document.getElementsByName('password')[0].style.border='red solid 1px'
+            $('input[name="password"] + .updateinfo_error_tooltip').html('密码长度为6到20位')
+            $('input[name="password"] + .updateinfo_error_tooltip').css('display','block');
+            return false;
+        }else{
+            var reg = /\w{6,20}/g
+            if(!reg.test(password)){
+                document.getElementsByName('password')[0].style.border='red solid 1px'
+                $('input[name="password"] + .updateinfo_error_tooltip').html('密码格式不正确')
+                $('input[name="password"] + .updateinfo_error_tooltip').css('display','block');
+                return false;
+            }else{
+                document.getElementsByName('password')[0].style.border='#ccc solid 1px'
+                $('input[name="password"] + .updateinfo_error_tooltip').html('')
+                $('input[name="password"] + .updateinfo_error_tooltip').css('display','none');
+                return true;
+            }
+        }
+    }
+    function isSame(){
+        var password = document.getElementsByName('password')[0].value;
+        var password2 = document.getElementsByName('password2')[0].value;
+        if(password != password2){
+            document.getElementsByName('password2')[0].style.border='red solid 1px'
+            $('input[name="password2"] + .updateinfo_error_tooltip').html('两次输入的密码不一致')
+            $('input[name="password2"] + .updateinfo_error_tooltip').css('display','block');
+            return false;
+        }else{
+            document.getElementsByName('password2')[0].style.border='#ccc solid 1px'
+            $('input[name="password2"] + .updateinfo_error_tooltip').html('')
+            $('input[name="password2"] + .updateinfo_error_tooltip').css('display','none');
+            return true;
+        }
+    }
+
+    function save_info(){
+        if(!isOldEmpty()){
+            return false;
+        }else if(!isPassC()){
+            return false;
+        }else if(!isSame()){
+            return false;
+        }else{
+            var url = interface.user.updateinfo
+            var oldpassword = 'oldpassword=' + document.getElementsByName('old_password')[0].value
+            var password = '&password=' + document.getElementsByName('password')[0].value
+            var datastr =  oldpassword+password
+
+            ajaxpost(url,datastr,function(data){
+                if(data.error ==0){
+                    location.href = "/static/web/html-user/mycenter.html"
+                    alert('修改成功');
+                }else{
+                    alert(data['msg'])
+                }
+            })
+        }
+
+    }
+</script>
+
+</html>

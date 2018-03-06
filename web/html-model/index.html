@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+    <div style="position: absolute; top: 10px;left:140px;">
+        <div style="float: left;height: 40px;line-height:40px;margin-right: 20px;"><a href="javascript:;" class="v btn green" onclick="upload_model()">上传模型</a></div>
+        <div style="float: left; margin: 0;padding: 0;" class="search_div" id="_searchdata"></div>
+    </div>
+
+    <div class="_main_con_5" id="_data_con">
+
+        <div class="pd20">
+
+            <div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile" id="_r_title"></span>
+                    <ul class="v breadnav1" id="_r_bnav">
+                        <li><a href="#">首页</a></li>
+                        <li>模型管理</li>
+                    </ul>
+                </h4>
+            </div>
+
+            <div class="bgpd15" style="position: relative;padding-top: 10px;min-height: 768px;">
+                <div  id="_data_list"></div>
+                <div id="toTop" style="display: none;"><a onclick="gotoTop()"><i class="iconfont icon-huidaodingbu" style="font-size: 26px;"></i></a></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+
+
+    shownav({
+        oname:'模型',
+        tname:'模型管理'
+    });
+
+    /*搜索条件*/
+    var d_form = data_form();
+    d_form.data = [
+        {
+            desc:'模型名称',
+            type:"text",
+            name:"model_name",
+            value:'',
+            ph:'',
+            style:'width:200px'
+        },
+        {
+            desc:'模型类型',
+            type:"select",
+            name:"model_type",
+            data:[
+                {
+                    key:'',
+                    text:'请选择'
+                },
+                {
+                    key:'0',
+                    text:'安防场景行人检测模型'
+                },
+                {
+                    key:'1',
+                    text:'安防场景车辆检测模型'
+                },
+                {
+                    key:'2',
+                    text:'安防场景非机动车检测模型'
+                },
+                {
+                    key:'3',
+                    text:'adas场景车辆检测模型'
+                },
+                {
+                    key:'4',
+                    text:'adas场景行人检测模型'
+                },
+                {
+                    key:'5',
+                    text:'adas场景交通标识牌检测模型'
+                },
+                {
+                    key:'6',
+                    text:'adas场景交通灯检测模型'
+                },
+                {
+                    key:'7',
+                    text:'室内场景人头检测模型'
+                },
+                {
+                    key:'8',
+                    text:'室内场景手势识别模型'
+                },
+            ],
+            value:'',
+            ph:'',
+            change:''
+        },
+        {
+            desc:'search',
+            type:"sbtn",
+            icon:'icon-iconfontsousuo1',
+            fun:'searchdata()',
+            name:"",
+            value:'',
+            ph:'',
+        }
+    ]
+    d_form.datahtml('_searchdata');
+
+    var obj = {
+        url: interface.model.list,
+        domid:'_data_list',
+        flag:0,
+        data:{}
+    };
+    var _modellist = modellist(obj);
+
+    function searchdata(){
+        var model_name = document.getElementsByName('model_name')[0].value;
+        var select = document.getElementsByName('model_type')[0];
+        _modellist.data.model_name = model_name;
+        _modellist.data.type= select.options[select.selectedIndex].value;
+        _modellist.ajaxmodeldata();
+    }
+    function showtoTop(_this){
+        if(_this.scrollTop >= 768){
+            $("#toTop").fadeIn(400);
+        }else{
+            $("#toTop").stop().fadeOut(400);
+        }
+    }
+
+    function gotoTop(){
+        $("#modellist").animate({scrollTop:"0px"},200);
+    }
+
+    function selectone(node){
+        var type = parseInt(node.getAttribute('index').split('_')[1]);
+        console.log(type);
+        var task_id = _modellist.cur_task_id;
+        var url = interface.train.detail;
+        datastr = 'id='+task_id;
+        ajaxpost(url,datastr,function(data){
+            if(data.error ==0){
+                show(type,data.data);
+            }
+        })
+    }
+    function show(type,data) {
+        var html = '';
+        html += '<div>' +
+            '<div><a href="javascripr:;" class="v btn blue" style="margin-bottom: 10px; border-radius:3px">参数详情</a></div>';
+        switch (type) {
+            case 0:
+                html += g_task_config_html('数据',data.data_val);
+                html += '</div>'
+                document.getElementById('_right_panel').innerHTML = html;
+                break;
+            case 1:
+                html += g_task_config_html('模型',{model_name:_modellist.cur_model_name});
+                html += '</div>'
+                document.getElementById('_right_panel').innerHTML = html;
+                break;
+            case 2:
+                html += g_task_config_html('数据配置', data.data_config);
+                html += '</div>'
+                document.getElementById('_right_panel').innerHTML = html;
+                break;
+            case 3:
+                html += g_task_config_html('模型配置', data.model_config);
+                html += '</div>'
+                document.getElementById('_right_panel').innerHTML = html;
+                break;
+            case 4:
+                evaluatedetail(data);
+                break;
+
+        }
+    }
+    function showmodel(data){
+        var html ='';
+        html += '<div><span style="display: inline-block; margin-right: 10px;margin-bottom: 10px; padding: 5px; background: #eee;">选择的模型： </span><span>'+data['Model_name']+'</span></div>';
+        return html;
+    }
+    function showdata(data){
+        var html ='';
+        html += '<div><span style="display: inline-block; margin-right: 10px;margin-bottom: 10px; padding: 5px; background: #eee;">选择的训练数据： </span><span>'+data['Train_data']+'</span></div>';
+        html += '<div><span style="display: inline-block; margin-right: 10px;margin-bottom: 10px; padding: 5px; background: #eee;">选择的测试数据： </span><span>'+data['Val_data']+'</span></div>';
+        return html;
+    }
+    function showmodelconfig(data){
+        var model_config = data['Model_config'].split(',');
+        var html ='';
+        html += '<div><span style="display: inline-block; margin-right: 10px;margin-bottom: 10px; padding: 5px; background: #eee;">模型参数： </span>';
+        for(var i=0;i<model_config.length;i++){
+            html += '<div style="margin-bottom: 5px;"><span>'+model_config[i].split('^_^')[2]+':</span><span>'+model_config[i].split('^_^')[1]+'</span></div>'
+        }
+        html += '</div>';
+        return html;
+    }
+    function showdataconfig(data){
+        var data_config = data['Data_config'].split(',');
+        var html ='';
+        html += '<div><span style="display: inline-block; margin-right: 10px;margin-bottom: 10px; padding: 5px; background: #eee;">数据参数： </span>';
+        for(var i=0;i<data_config.length;i++){
+            html += '<div style="margin-bottom: 5px;"><span>'+data_config[i].split('^_^')[2]+':</span><span>'+data_config[i].split('^_^')[1]+'</span></div>'
+        }
+        html += '</div>';
+        return html;
+    }
+    function evaluatedetail(data){
+        window.location.href ='../html-train/evaluate_detail.html';
+    }
+
+    function upload_model(){
+        var popup = tool_popup();
+        popup.init()
+        popup.con = '<div id="model_upload_pop"></div>';
+        popup.title = '上传模型';
+        popup.style_popup_con +='min-height:400px;height:400px;';
+        popup.button_text ='确定';
+        popup.show();
+        var html ='';
+        html += '<div style="width: 600px; margin: 0 auto;position: relative;">' +
+                '<form action="'+interface.model.upload_model+'" enctype="multipart/form-data" method="post">'+
+            '                        <div class="v input_2 mb10">\n' +
+            '                            <label class="w30">本地上传</label>' +
+            '                            <input type="file" class="text w70" value=""  style="border: none;" id="model_file" name="model_file">' +
+            '                            <p class="info pdw30"></p>\n' +
+            '                        </div>' +
+            '                        <div class="v input_2 mb10">\n' +
+            '                            <label class="w30">模型类型</label>\n' +
+            '                            <select class="text w70" style="height: 30px;" id="model_type" onchange="" name="type">' +
+            '                                <option value="0">安防场景行人检测模型</option>' +
+            '                                <option value="1">安防场景车辆检测模型</option>' +
+            '                                <option value="2">安防场景非机动车检测模型</option>' +
+            '                                <option value="3">adas场景车辆检测模型</option>' +
+            '                                <option value="4">adas场景行人检测模型</option>' +
+            '                                <option value="5">adas场景交通标识牌检测模型</option>' +
+            '                                <option value="6">adas场景交通灯检测模型</option>' +
+            '                                <option value="7">室内场景人头检测模型</option>' +
+            '                                <option value="8">室内场景手势识别模型</option>' +
+            '                            </select>' + '</div>' +
+            '                        <div class="v input_2 mb10">' +
+            '                            <label class="w30">模型描述</label>' +
+            '                            <textarea name="des" class="text w70" cols="30" rows="6" style="border: 1px solid #ccc;" id="model_desc"></textarea>' +
+            '                            <p class="info pdw30"></p>' +
+            '                        </div>' +
+            '                        <span class="tooltip" id="empty_desc">模型描述不能为空</span>'+
+            '                        <div class="v input_2 mb10">' +
+                '<input type="submit" value="上传" style="float: right;"/>'+
+            '                            <p class="info pdw30"></p>' +
+            '                        </div>' +
+            '</form>'+
+            '</div>'
+
+        document.getElementById('model_upload_pop').innerHTML = html;
+        popup.callback = function(){
+            var model_desc = document.getElementById('model_desc').value;
+            var select = document.getElementById('model_type');
+            var index= select.selectedIndex;
+            var model_type = select.options[index].value;
+
+            var model_file = document.getElementById('model_file').value;
+            var tip_desc = document.getElementById('empty_desc');
+
+            if(model_desc.trim() == ''){
+                tip_desc.style.display ='block';
+                tip_desc.style.top ='90px'
+            }else{
+                var url = interface.data.upload;
+                console.log(model_file);
+                var datastr = 'des='+model_desc+'&type='+model_type+'&model_file='+model_file;
+
+                ajaxpost(url,datastr,function(data){
+                    if(data.error == 0){
+                        succPrompt("上传模型成功");
+                    }else{
+                        errorPrompt(data['msg']);
+                    }
+                })
+            }
+        }
+    }
+
+
+
+
+
+        /*列表显示*/
+
+//    var obj = {
+//        url:interface.model.list,
+//        domid:'_data_list',
+//        title:[
+//            {
+//                title_callback:function(status){
+//                    return '收藏';
+//                },
+//                callback:function(data,status){
+//                    return '<a href="#"><i class="iconfont icon-shoucang1" onclick="toggle_collect(this)"></i></a>'
+//                }
+//            },
+//            {
+//                title:'模型名称',
+//                callback:function(data){
+//                    return '<span>'+data+'</span>'
+//                }
+//            },
+//            {
+//                title:'训练名称',
+//                callback:function(data){
+//                    return '<span>'+data+'</span>'
+//                }
+//            },
+//            {
+//                title:'模型类型',
+//                callback:function(data){
+//                    return g_status_train[data]
+//                }
+//            },
+//            {
+//                title:'训练配置',
+//                callback:function(data){
+//                    return '<a href="javascript:;" d-id="'+data+'" onclick="">查看</a>'
+//                }
+//            },
+//            {
+//                title:'模型描述',
+//                callback:function(data){
+//                    return data
+//                }
+//            },
+//            {
+//                title:'训练时间',
+//                callback:function(data){
+//                    return '<a href="javascript:;" d-id="'+data+'" onclick="train_config(this)">查看</a>'
+//                }
+//            },
+//            {
+//              title:'评测详情',
+//              callback:function(data){
+//                  return '<a href="javascript:;" d-id="'+data+'" onclick="">查看</a>／'+
+//                         '<a href="../html-train/evaluate_detail.html">跳到评测页面</a>'
+//              }
+//            },
+//            {
+//                title:'操作',
+//                callback:function(data,status){
+//                     return '<a href="javascript:;" d-id="'+data+'" onclick="edit_model(this)">编辑</a>／'+
+//                            '<a href="javascript:;" d-id="'+data+'" onclick="del_model(this)">删除</a>'
+//                }
+//            }
+//        ],
+//        datakey:[
+//            'id',
+//            "model_name",
+//            "task_name",
+//            "model_type",
+//            "id",
+//            "model_des",
+//            "id",
+//            "id",
+//            "id"
+//        ],
+//        isstatus:{
+//            cur:0,
+//            domid:'status_id',
+//            data:[
+//                {
+//                    status:0,
+//                    text:'全部模型'
+//                },
+//                {
+//                    status:1,
+//                    text:'收藏的模型'
+//                },
+//                {
+//                    status:2,
+//                    text:'已上传的模型'
+//                },
+//                {
+//                    status:3,
+//                    text:'已删除的模型'
+//                }
+//            ]
+//        }
+//    }
+//    var _list = datalist(obj);
+//
+//    function toggle_collect(node){
+//        if(Class.hasClass(node,'icon-shoucang1')){
+//            Class.removeClass(node,'icon-shoucang1')
+//            Class.addClass(node,'icon-shoucang')
+//        }else{
+//            Class.removeClass(node,'icon-shoucang')
+//            Class.addClass(node,'icon-shoucang1')
+//        }
+//    }
+
+
+
+
+
+//    function edit_model(dom){
+//        var id = dom.getAttribute('d-id');
+//    }
+//    function del_model(dom){
+//        var id = dom.getAttribute('d-id')
+//        walert("是否删除",function(){
+//            var url = interface.model.del_model;
+//            var ids=[];
+//            ids.push(id);
+//            var result = JSON.stringify(ids);
+//            var datastr = "model_ids="+result;
+//            ajaxpost(url,datastr,function(data){
+//                if(data.error ==0){
+//                    succPrompt('删除成功');
+//                   _list.ajaxpagedata();
+//                }else{
+//                    errorPrompt(data['message']);
+//                }
+//            })
+//        })
+//    }
+</script>
+</html>

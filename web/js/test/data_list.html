@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../../css/vhtml.css" >
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_f83ufp3l4ecanhfr.css">
+  </head>
+  <body>
+      <div class="_main">
+          <div class="_main_con_1">
+              <div class="">
+                  <div class="logo">
+                    <i class="iconfont icon-dipingxianlanseLOGO"></i>
+                  </div>
+                  <div class="one_nav">
+                      <a href="#">
+                        <i class="iconfont icon-shiyan"></i>
+                        <span>训练</span>
+                      </a>
+                      <a href="#">
+                        <i class="iconfont icon-biaozhu"></i>
+                        <span>标注</span>
+                      </a>
+                      <a href="#">
+                        <i class="iconfont icon-data1"></i>
+                        <span>数据</span>
+                      </a>
+                      <a href="#">
+                        <i class="iconfont icon-module"></i>
+                        <span>模型</span>
+                      </a>
+                      <a href="#" class="active">
+                        <i class="iconfont icon-yonghu1"></i>
+                        <span>用户</span>
+                      </a>
+                  </div>
+              </div>
+
+              <div class="bottom_nav">
+                <div class="one_nav">
+                    <a href="#">
+                      <i class="iconfont icon-yonghu"></i>
+                      <span>用户</span>
+                    </a>
+                    <a href="#">
+                      <i class="iconfont icon-bangzhu"></i>
+                      <span>帮助</span>
+                    </a>
+                    <a href="#">
+                      <i class="iconfont icon-fankui"></i>
+                      <span>反馈</span>
+                    </a>
+                </div>
+              </div>
+
+          </div>
+
+          <div class="_main_con_2" id="_bar_con" style="left:-180px">
+              <div class="_mc_con">
+                  <div class="nav_t_list">
+                      <div class="one">我的任务</div>
+                      <div class="two">
+                          <div class="">任务1</div>
+                          <div class="">任务2</div>
+                          <div class="">任务3</div>
+                          <div class="">任务4</div>
+                          <div class="">任务5</div>
+                          <div class="">任务6</div>
+                      </div>
+                  </div>
+              </div>
+              <div class="showhide_bar" id="showhide_bar" onclick="showhide_bar()">
+                <i class="iconfont icon-down2"></i>
+              </div>
+          </div>
+
+          <div class="_main_con_5">
+
+
+
+            <div class="pd20">
+
+                <div class="mb20">
+                    <h4 class="v h bbottom">
+                        <span class="titile">训练任务管理</span>
+                        <ul class="v breadnav1">
+                            <li><a href="#">面包导航1</a></li>
+                            <li>面包导航4</li>
+                        </ul>
+
+                    </h4>
+                </div>
+
+                <div class="search_div">
+                    <div class="user">
+                        <label for="">用户名</label>
+                        <input type="text" name="" value="">
+                    </div>
+                    <div class="name" style="margin-left:20px">
+                        <label for="">真实姓名</label>
+                        <input type="text" name="" value="">
+                    </div>
+                    <div class="user_type" style="margin-left:20px">
+                        <label for="">用户类型</label>
+                        <select class="" name="">
+                            <option value="">vip</option>
+                            <option value="">普通用户</option>
+                        </select>
+                    </div>
+                    <div class="search" >
+                        <a href="#" class="v btn blue">搜索</a>
+                    </div>
+                </div>
+
+                <div class="oz bgpd15" style="margin-bottom: 1px;">
+                    <span id="_data_status">
+                    </span>
+                    <a href="#" class="v btn green fr"> + 添加用户</a>
+                </div>
+
+                <div class="bgpd15" id="_data_list">
+
+                </div>
+
+            </div>
+          </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="../lib/jquery-1.9.0.js"></script>
+  <script type="text/javascript" src="../api.js"></script>
+
+  <script type="text/javascript" src="../util/event.js"></script>
+
+  <script type="text/javascript" src="../components/nav.js"></script>
+  <script type="text/javascript" src="../components/data_list.js"></script>
+  <script type="text/javascript" src="../components/page.js"></script>
+
+  <script type="text/javascript">
+
+      var obj = {
+            url:'/datasys/rbac/request/lists/',
+            domid:'_data_list',
+            titile:[
+                  "用户名",
+                  "用户类型",
+                  {
+                        title:'认证状态',
+                        callback:function(data){
+                            return '<a>'+data+'</a>'
+                        }
+                  },
+                  {
+                        title:'权限',
+                        callback:function(data){
+                            return '<a>'+data+'</a>'
+                        }
+                  },
+                  {
+                        title:'操作',
+                        callback:function(data){
+                            return '<a>'+data+'</a>'
+                        }
+                  }
+            ],
+            datakey:[
+                  "id",
+                  "time",
+                  "status",
+                  "user_id"
+            ]
+
+      }
+      var _list = datalist(obj)
+
+  </script>
+
+</html>

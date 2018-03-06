@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+
+    <div class="_main_con_5" id="_data_con">
+        <div class="pd20">
+            <div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile" id="_r_title"></span>
+                    <ul class="v breadnav1" id="_r_bnav">
+                        <li><a href="#">首页</a></li>
+                        <li>训练详情</li>
+                    </ul>
+                </h4>
+            </div>
+            <div class="bgpd15 oz" style="position: absolute; left: 20px; top: 80px; right: 20px; bottom: 20px;" id="_data_list"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+    shownav({
+        oname:'训练',
+        tname:'评测详情'
+    });
+    var obj = {
+        domid:'_data_list',
+        lineurl:interface.train.judge_curve_line,
+        columnurl:interface.train.judge_curve_column,
+        binaryurl:interface.train.judge_curve_binary,
+        totalurl:interface.train.judge_curve,
+        epochurl:interface.train.epoch_info,
+    };
+     var evaluate_chart = chart(obj);
+     evaluate_chart.init();
+</script>
+
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_f83ufp3l4ecanhfr.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+
+    <div class="_main_con_5" id="_data_con">
+
+        <div class="pd20">
+
+            <div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile" id="_r_title"></span>
+                    <ul class="v breadnav1" id="_r_bnav">
+                        <li><a href="#">首页</a></li>
+                        <li>数据管理</li>
+                    </ul>
+                </h4>
+            </div>
+
+            <!--<div class="search_div" id="">-->
+            <!--<a href="javascript:;" class="v btn green" style="float: right;display: inline-block;" onclick="upload_raw()">上传原始数据</a>-->
+            <!--</div>-->
+            <div class="oz bgpd15" style="margin-bottom: 1px;">
+                <span id="status_id"></span>
+                <span id="batch_operation" style="float: right;">
+                    <a href="javascript:;" class="v btn green" onclick="upload_model()">上传模型</a>
+                    <a href="javascript:;" class="v btn red"  onclick="del_models()">批量删除</a>
+                </span>
+            </div>
+            <div class="bgpd15" id="_data_list"></div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+
+    shownav({
+        oname:'模型',
+        tname:'用户上传数据'
+    })
+    /*搜索条件*/
+        var d_form = data_form();
+        d_form.data = [
+            {
+                desc:'模型名称',
+                type:"text",
+                name:"model_name",
+                value:'',
+                ph:'',
+            },
+            {
+                desc:'训练名称',
+                type:'text',
+                name:'train_name',
+                value:'',
+                ph:'',
+            },
+            {
+                desc:'模型描述',
+                type:'text',
+                name:'model_desc',
+                value:''
+            },
+            {
+                desc:'search',
+                type:"sbtn",
+                fun:'search()',
+                name:"username",
+                value:'',
+                ph:'',
+            }
+        ]
+        d_form.datahtml('_searchdata');
+
+        /*列表显示*/
+
+    var obj = {
+        url:interface.train.search,
+        domid:'_data_list',
+//          data:{list:0},
+        title:[
+            {
+                title_callback:function(status){
+                    return '收藏';
+                },
+                callback:function(data,status){
+                    return '<a href="#"><i class="iconfont icon-shoucang1" onclick="toggle_collect(this)"></i></a>'
+                }
+            },
+            {
+                title:'模型名称',
+                callback:function(data){
+                    return '<span>'+data+'</span>'
+                }
+            },
+            {
+                title:'训练名称',
+                callback:function(data){
+                    return '<span>'+data+'</span>'
+                }
+            },
+            {
+                title:'模型类型',
+                callback:function(data){
+                    return g_status_train[data]
+                }
+            },
+            {
+                title:'训练配置',
+                callback:function(data){
+                    return data
+                }
+            },
+            {
+                title:'模型描述',
+                callback:function(data){
+                    return data
+                }
+            },
+            {
+                title:'训练时间',
+                callback:function(data){
+                    return '<a href="javascript:;" d-id="'+data+'" onclick="train_config(this)">查看</a>'
+                }
+            },
+            {
+              title:'评测详情',
+              callback:function(data){
+                  return '<a href="javascript:;" d-id="'+data+'" onclick="">查看</a>／'+
+                         '<a href="javascript:;" onclick="">跳到评测页面</a>'
+              }
+            },
+            {
+                title:'操作',
+                callback:function(data,status){
+                     return '<a href="javascript:;" d-id="'+data+'" onclick="edit_task(this)">编辑</a>／'+
+                            '<a href="javascript:;" d-id="'+data+'" onclick="">删除</a>'
+                }
+            }
+        ],
+        datakey:[
+            'Id',
+            "Task_name",
+            "Model_name",
+            "Task_status",
+            "Id",
+            "Train_data",
+            "Id",
+            "Id"
+        ],
+        isstatus:{
+            cur:0,
+            domid:'status_id',
+            data:[
+                {
+                    status:0,
+                    text:'全部模型'
+                },
+                {
+                    status:1,
+                    text:'收藏的模型'
+                },
+                {
+                    status:2,
+                    text:'已上传的模型'
+                },
+                {
+                    status:3,
+                    text:'已删除的模型'
+                }
+            ]
+        }
+    }
+    var _list = datalist(obj);
+
+    function toggle_collect(node){
+        if(Class.hasClass(node,'icon-shoucang1')){
+            Class.removeClass(node,'icon-shoucang1')
+            Class.addClass(node,'icon-shoucang')
+        }else{
+            Class.removeClass(node,'icon-shoucang')
+            Class.addClass(node,'icon-shoucang1')
+        }
+    }
+
+
+</script>
+</html>

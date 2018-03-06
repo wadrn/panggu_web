@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+
+    <div class="_main_con_5" id="_data_con">
+        <div class="pd20">
+            <div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile" id="_r_title"></span>
+                    <ul class="v breadnav1" id="_r_bnav">
+                        <li><a href="#">首页</a></li>
+                        <li>训练图片搜索</li>
+                    </ul>
+                </h4>
+            </div>
+            <div class="oz bgpd15" style="margin-bottom: 1px;">
+                <label>图片名称</label>
+                <input type="text" style="height: 25px;margin-right: 20px" name="pic_name"/>
+                <a class="v btn blue" onclick="searchPicture()">搜索</a>
+            </div>
+            <div class="bgpd15" id="pictures"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+    shownav({
+        oname:'训练',
+        tname:'训练图片搜索'
+    });
+
+    function getQueryString(name){
+        var reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)', 'i');
+        var value ='';
+        value = window.location.search.substr(1).match(reg);
+        return value[2];
+    }
+    getPicture();
+    function getPicture(){
+        var pic_name;
+        var id;
+        if(document.getElementsByName('pic_name')[0].value != ''){
+            pic_name = document.getElementsByName('pic_name')[0].value;
+        }else{
+            pic_name = getQueryString('pic_name');
+        }
+        id = getQueryString('id');
+        if(pic_name){
+//            $.ajax({
+//                url:'http://10.19.19.23:8500/static/web/js/data/picture.json',
+//                type:"get",
+//                dataType:'json',
+//                success:function(data){
+//                    var html ='';
+//                    html  +='<ul>';
+//                    for(var i=0;i<data.data.length;i++){
+//                        html += '<li style="margin-bottom: 10px; padding: 10px; border: 1px solid #eee;"><div style="margin-bottom: 10px;">'+data.data[i].name+'</div><img src="'+data.data[i].url+'" style="max-width: 1000px;"/></li>'
+//                    }
+//                    html += '</ul>';
+//                    document.getElementById('pictures').innerHTML = html;
+//                },
+//                error:function(){
+//                    hide_loading();
+//                    alert('接口 '+url+' 请求错误')
+//                }
+//            })
+            var url = interface.train.image_search;
+            var datastr ='id='+id+'&name='+pic_name;
+            ajaxpost(url,datastr,function(data){
+                    var html ='';
+                    html  +='<ul>';
+                    for(var i=0;i<data.data.length;i++){
+                        var name = data.data[i];
+                        html += '<li style="margin-bottom: 10px; padding: 10px; border: 1px solid #eee;"><div style="margin-bottom: 10px;">'+name+'</div><img src="'+data.data[i]+'" style="max-width: 1000px;"/></li>'
+                    }
+                    html += '</ul>';
+                    document.getElementById('pictures').innerHTML = html;
+            })
+        }else{
+            alert('请输入图片名称')
+        }
+    }
+    function searchPicture(){
+        getPicture();
+    }
+</script>
+</html>

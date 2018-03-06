@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../../css/vhtml.css" >
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/main_style.css">
+    <link rel="stylesheet" href="../../css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_f83ufp3l4ecanhfr.css">
+  </head>
+  <body>
+  <div class="_main">
+      <form id="formID">
+
+          <input type="text" id="" class="show_arc" did="arc_1" value="1"  /><br/>
+          <input type="text" id="" class="show_arc" did="arc_2"  value="0.8"/><br/>
+          <input type="text" id="" class="show_arc" did="arc_3"  value="0.3"/>
+
+          <div>
+            <div style="width: 400px; height:320px;  margin:70px; border: 1px dashed #333; position: relative; font-size: 12px;  display: inline-block;" id="demo_div">
+                <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-30px; left: 0px;"></div>
+                <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-30px; right: 0px;"></div>
+                <div style="position: absolute; width: 100%; height: 1px; background: #333; left: 0px; top:-20px;"></div>
+
+                <div style="position: absolute; width: 20px; height: 1px; background: #333; top:0px;    right: -30px;"></div>
+                <div style="position: absolute; width: 20px; height: 1px; background: #333; bottom:0px; right: -30px;"></div>
+                <div style="position: absolute; height: 100%; width: 1px; background: #333; top:0px; right: -20px;"></div>
+
+
+                <div style="width: 20px; height:20px; background: #09f; position: relative; font-size: 12px; display: inline-block; left: 50%;top: 50%; transform: translate(-50%, -50%); transform-origin: 50% 50% 0px;" id="standard_div">
+                    <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-30px; left: 0px;"></div>
+                    <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-30px; right: 0px;"></div>
+                    <div style="position: absolute; width: 100%; height: 1px; background: #333; left: 0px; top:-20px;"></div>
+
+                    <div style="position: absolute; width: 20px; height: 1px; background: #333; top:0px;    right: -30px;"></div>
+                    <div style="position: absolute; width: 20px; height: 1px; background: #333; bottom:0px; right: -30px;"></div>
+                    <div style="position: absolute; height: 100%; width: 1px; background: #333; top:0px; right: -20px;"></div>
+
+                    <div style="width: 16px; height: 16px; background: #ffff66; position: absolute; left: 50%; top:50%; transform:translate(-50%,-50%); transform-origin:50% 50%;"  id="standard_div_con">
+                        <div class="type_height">
+                            <div style="position: absolute; width: 36px; height: 1px; background: #333; top:0px;    left: -40px;"></div>
+                            <div style="position: absolute; width: 36px; height: 1px; background: #333; bottom:0px; left: -40px;"></div>
+                            <div style="position: absolute; height: 100%; width: 1px; background: #333; top:0px;    left: -30px;"></div>
+                        </div>
+
+                        <div class="type_width">
+                            <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-20px; left: 0px;"></div>
+                            <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-20px; right: 0px;"></div>
+                            <div style="position: absolute; width: 100%; height: 1px; background: #333; top:-10px; left: 0px; "></div>
+                        </div>
+
+                        <div class="type_jx" style="transform:rotate(45deg);transform-origin: left top; margin-top: 7px; margin-left: -7px;">
+                            <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-20px; left: 0px;"></div>
+                            <div style="position: absolute; height: 20px; width: 1px; background: #333; top:-20px; right: -33px;"></div>
+                            <div style="position: absolute; width: 130%; height: 1px; background: #333; top:-10px; left: 1px; "></div>
+                        </div>
+
+                        <div id="arc_1" style="position: absolute;  left: 50%; top:50%; transform:translate(-50%,-50%); transform-origin:50% 50%;  background: rgba(255,0,0,.3); border-radius: 100%;"></div>
+                        <div id="arc_2" style="position: absolute;  left: 50%; top:50%; transform:translate(-50%,-50%); transform-origin:50% 50%; background: rgba(0,255,0,.3);  border-radius: 100%;"></div>
+                        <div id="arc_3" style="position: absolute;  left: 50%; top:50%; transform:translate(-50%,-50%); transform-origin:50% 50%; background: rgba(0,0,255,.3);  border-radius: 100%;"></div>
+                    </div>
+
+                    <div style="position: absolute; background: #f5f5f5; left: 50%;margin-left: -30px; margin-top: -30px;">宽度<input type="text" iid="standard_div" itype="width" min="24" max="72" style="width: 40px; height: 20px; border: 1px solid #ccc; text-align: center" value="40" class="standard_config"/></div>
+                    <div style="position: absolute; background: #f5f5f5; right: -50px; top: 50%; margin-top: -30px;">高度<br/>  <input type="text" iid="standard_div" itype="height" min="24" max="72" style="width: 40px; height: 20px; border: 1px solid #ccc;text-align: center" value="40" class="standard_config"/></div>
+                    <div style="position: absolute; left: -70px; top: 50%; margin-top: -40px;">标准长度<br/><input type="text"  iid="standard_div_con"  itype="all" style="width: 40px; height: 20px; border: 1px solid #ccc;text-align: center" value="32" class="standard_config"/></div>
+
+                </div>
+
+                <div style="position: absolute; left: 50%; top: 0px; margin-left: -50px; margin-top: -30px; background: #f5f5f5;padding: 0px 10px;">样本图像宽度<input type="text" iid="demo_div" itype="width"         class="validate[required,custom[integer],max[512],min[128]] text-input"  min="128" max="512" style="width: 40px; height: 20px; border: 1px solid #ccc;  text-align: center" value="384" class="standard_config"/></div>
+                <div style="position: absolute; right: -90px; top: 50%; margin-top: -40px;                  background: #f5f5f5;padding: 10px 0;">样本图像高度<br/>  <input type="text" iid="demo_div" itype="height"   class="validate[required,custom[integer],max[512],min[128]] text-input" min="128" max="512" style="width: 40px; height: 20px; border: 1px solid #ccc;text-align: center" value="256" class="standard_config"/></div>
+            </div>
+          </div>
+      </form>
+  </div>
+  </body>
+  <script type="text/javascript" src="../requirefile.js"></script>
+
+  <script type="text/javascript">
+     var num  = 3
+     standard_init()
+     function standard_init(){
+         var size = 32
+         var size2 = 40
+         $('#standard_div_con').css({
+             "height":(size * num)+'px',
+             "width" :(size * num)+'px'
+         })
+         $('#standard_div').css({
+             "height":(size2 * num)+'px',
+             "width" :(size2 * num)+'px'
+         })
+         setarc()
+     }
+
+     function setarc(){
+         $('.show_arc').each(function(){
+            var size = $(this).val() * 100
+            var did  = $(this).attr('did')
+             $('#'+did).css({
+                 width:size+'%',
+                 height:size+'%'
+             })
+         })
+     }
+
+     $('body').on('blur','.show_arc',function(){
+         var size = $(this).val() * 100
+         var did  = $(this).attr('did')
+         $('#'+did).css({
+             width:size+'%',
+             height:size+'%'
+         })
+     })
+
+    $('body').on('blur','.standard_config',function(){
+        var size = $(this).val()
+        var domid = $(this).attr('iid')
+        var type = $(this).attr('itype')
+
+        var min = parseInt($(this).attr('min'))
+        var max = parseInt($(this).attr('max'))
+        if(type=='all'){
+            $('#'+domid).css({
+                "height":(size * num)+'px',
+                "width" :(size * num)+'px'
+            })
+        }else{
+            if(size>=min && size<=max){
+                var obj = {}
+                if(domid=='demo_div'){
+                    obj[type] = (size)+'px'
+                }else{
+                    obj[type] = (size * num)+'px'
+                }
+
+                $('#'+domid).css(obj)
+            }else{
+                alert('输入值必须再'+min+'-'+max)
+            }
+        }
+    })
+
+     $('#formID').validationEngine();
+  </script>
+
+</html>

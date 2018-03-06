@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../../css/vhtml.css" >
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_f83ufp3l4ecanhfr.css">
+  </head>
+  <body>
+  <div class="_main">
+      <div class="_main_con_1">
+          <div class="">
+              <div class="logo">
+                  <i class="iconfont icon-dipingxianlanseLOGO"></i>
+              </div>
+              <div class="one_nav">
+                  <a href="#" class="active">
+                      <i class="iconfont icon-shiyan"></i>
+                      <span>训练</span>
+                  </a>
+                  <a href="#">
+                      <i class="iconfont icon-biaozhu"></i>
+                      <span>标注</span>
+                  </a>
+                  <a href="#">
+                      <i class="iconfont icon-data1"></i>
+                      <span>数据</span>
+                  </a>
+                  <a href="#">
+                      <i class="iconfont icon-module"></i>
+                      <span>模型</span>
+                  </a>
+                  <a href="#">
+                      <i class="iconfont icon-yonghu1"></i>
+                      <span>用户</span>
+                  </a>
+              </div>
+          </div>
+
+          <div class="bottom_nav">
+              <div class="one_nav">
+                  <a href="#">
+                      <i class="iconfont icon-yonghu"></i>
+                      <span>用户</span>
+                  </a>
+                  <a href="#">
+                      <i class="iconfont icon-bangzhu"></i>
+                      <span>帮助</span>
+                  </a>
+                  <a href="#">
+                      <i class="iconfont icon-fankui"></i>
+                      <span>反馈</span>
+                  </a>
+              </div>
+          </div>
+
+      </div>
+      <div class="_main_con_2" id="_bar_con">
+          <div class="_mc_con">
+              <div class="nav_t_list">
+                  <div class="one">我的任务</div>
+                  <div class="two">
+                      <div class="">任务1</div>
+                      <div class="">任务2</div>
+                      <div class="">任务3</div>
+                      <div class="">任务4</div>
+                      <div class="">任务5</div>
+                      <div class="">任务6</div>
+                  </div>
+              </div>
+          </div>
+          <div class="showhide_bar" id="showhide_bar" onclick="showhide_bar()">
+              <i class="iconfont icon-down2"></i>
+          </div>
+      </div>
+
+
+      <div class="_main_con_4" id="_main_con_4">
+          <div style="height: 160px; width: 100%; background: #ccc;"></div>
+          <div style="position: absolute; width:200px; top:500px; left: 0px;" id="svg_task_btn"></div>
+          <div class="svgdiv" id="svg_task" style="position: absolute; height:540px; top:500px; left: 200px; right:0px; background: #fff;"></div>
+      </div>
+  </div>
+  </body>
+
+
+  <script type="text/javascript" src="../requirefile.js"></script>
+
+  <script type="text/javascript">
+
+      var dataobj = [
+          {
+              "id": 1,
+              "num_filter": 16,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 2,
+              "stride_y": 2,
+              "pad_x": 1,
+              "pad_y": 1,
+              "use_activation": 1,
+              "pre": null,
+              "post": [
+                  2
+              ],
+              x:200,
+              y:510
+          },
+          {
+              "id": 2,
+              "num_filter": 16,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 2,
+              "stride_y": 2,
+              "pad_x": 0,
+              "pad_y": 0,
+              "use_activation": 1,
+              "pre": [
+                  1
+              ],
+              "post": [
+                  3
+              ],
+              x:200,
+              y:470
+          },
+          {
+              "id": 3,
+              "num_filter": 32,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 2,
+              "stride_y": 2,
+              "pad_x": 0,
+              "pad_y": 0,
+              "use_activation": 1,
+              "pre": [
+                  2
+              ],
+              "post": [
+                  4
+              ],
+              x:200,
+              y:420
+          },
+          {
+              "id": 4,
+              "num_filter": 32,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 1,
+              "stride_y": 1,
+              "pad_x": 1,
+              "pad_y": 1,
+              "use_activation": 1,
+              "pre": [
+                  3
+              ],
+              "post": [
+                  5
+              ],
+              x:200,
+              y:370
+          },
+          {
+              "id": 5,
+              "num_filter": 32,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 1,
+              "stride_y": 1,
+              "pad_x": 1,
+              "pad_y": 1,
+              "use_activation": 1,
+              "pre": [
+                  4
+              ],
+              "post": [
+                  6,
+                  8
+              ],
+              x:200,
+              y:320
+          },
+          {
+              "id": 6,
+              "num_filter": 48,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 2,
+              "stride_y": 2,
+              "pad_x": 1,
+              "pad_y": 1,
+              "use_activation": 1,
+              "pre": [
+                  5
+              ],
+              "post": [
+                  7
+              ],
+              x:100,
+              y:270
+          },
+          {
+              "id": 7,
+              "num_filter": 32,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 1,
+              "stride_y": 1,
+              "pad_x": 1,
+              "pad_y": 1,
+              "use_activation": 1,
+              "pre": [
+                  6
+              ],
+              "post": [
+                  8
+              ],
+              x:100,
+              y:220
+          },
+          {
+              "id": 8,
+              "num_filter": 32,
+              "kernel_x": 1,
+              "kernel_y": 1,
+              "stride_x": 2,
+              "stride_y": 2,
+              "pad_x": 0,
+              "pad_y": 0,
+              "use_activation": 1,
+              "pre": [
+                  5,
+                  7
+              ],
+              "post": [
+                  9
+              ],
+              x:200,
+              y:170
+          },
+          {
+              "id": 9,
+              "num_filter": 48,
+              "kernel_x": 3,
+              "kernel_y": 3,
+              "stride_x": 1,
+              "stride_y": 1,
+              "pad_x": 1,
+              "pad_y": 1,
+              "use_activation": 1,
+              "pre": [
+                  8
+              ],
+              "post": [
+                  10
+              ],
+              x:200,
+              y:120
+          },
+          {
+              "id": 10,
+              "num_filter": 64,
+              "kernel_x": 1,
+              "kernel_y": 1,
+              "stride_x": 1,
+              "stride_y": 1,
+              "pad_x": 0,
+              "pad_y": 0,
+              "use_activation": 1,
+              "pre": [
+                  9
+              ],
+              "post": [
+                  11
+              ],
+              x:200,
+              y:70
+          },
+          {
+              "id": 11,
+              "num_filter": 5,
+              "kernel_x": 1,
+              "kernel_y": 1,
+              "stride_x": 1,
+              "stride_y": 1,
+              "pad_x": 0,
+              "pad_y": 0,
+              "use_activation": 1,
+              "pre": [
+                  10
+              ],
+              "post": null,
+              x:200,
+              y:20
+          }
+      ]
+
+      function okdata(){
+          var arr = []
+          for(var i in dataobj){
+              var idata = dataobj[i]
+              arr.push({
+                  "id":idata.id,
+                  "x":idata.x,
+                  "y":idata.y,
+                  "text":"node",
+                  "rear":idata.pre,
+                  "link":idata.post,
+                  "draggable":true,
+                  "islink":true
+              })
+          }
+          return arr
+      }
+
+      var svg = svgdata({
+          taskdata:{
+              id:100,
+              name:'训练任务1',
+          },
+          domid:'svg_task',
+          data:okdata()
+      })
+
+
+      var btn = svgbtn({
+          svg:svg,
+          domid:'svg_task_btn',
+          data:[
+              {
+                  id:10000,
+                  x:0,
+                  y:100,
+                  text:'kernel',
+                  link:[],
+                  draggable:true,
+                  islink:true,
+                  click:'alert(0)'
+              }
+          ]
+      })
+
+
+
+/*
+
+
+        function cur_id(dom){
+            var id = parseInt(dom.getAttribute('d-id'))
+            if(svg.curid.indexOf(id) > -1){
+                svg.curid.splice(svg.curid.indexOf(id),1)
+            }else{
+                svg.curid.push(id)
+            }
+            svg.render()
+        }
+ */
+  </script>
+
+</html>

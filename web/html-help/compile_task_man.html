@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>完-编译任务管理.md</title>
+
+    <style id="wiz_custom_css">html, body {font-size: 12pt;}body {font-family: Helvetica, 'Hiragino Sans GB', '微软雅黑', 'Microsoft YaHei UI', SimSun, SimHei, arial, sans-serif;line-height: 1.6;margin: 0 auto;padding: 20px 16px;padding: 1.25rem 1rem;}h1, h2, h3, h4, h5, h6 {margin:20px 0 10px;margin:1.25rem 0 0.625rem;padding: 0;font-weight: bold;}h1 {font-size:20pt;font-size:1.67rem;}h2 {font-size:18pt;font-size:1.5rem;}h3 {font-size:15pt;font-size:1.25rem;}h4 {font-size:14pt;font-size:1.17rem;}h5 {font-size:12pt;font-size:1rem;}h6 {font-size:12pt;font-size:1rem;color: #777777;margin: 1rem 0;}div, p, ul, ol, dl, li {margin:0;}blockquote, table, pre, code {margin:8px 0;}ul, ol {padding-left:32px;padding-left:2rem;}ol.wiz-list-level1 > li {list-style-type:decimal;}ol.wiz-list-level2 > li {list-style-type:lower-latin;}ol.wiz-list-level3 > li {list-style-type:lower-roman;}blockquote {padding:0 12px;padding:0 0.75rem;}blockquote > :first-child {margin-top:0;}blockquote > :last-child {margin-bottom:0;}img {border:0;max-width:100%;height:auto !important;margin:2px 0;}table {border-collapse:collapse;border:1px solid #bbbbbb;}td, th {padding:4px 8px;border-collapse:collapse;border:1px solid #bbbbbb;min-height:28px;word-break:break-all;box-sizing: border-box;}.wiz-hide {display:none !important;}</style><style name="wiz_tmp_editor_style">html {height:100%;} body {min-height:100%;box-sizing:border-box;word-wrap: break-word !important;}a {word-wrap: break-word;}img::selection {background-color: rgba(0, 0, 255, 0.3);}.wiz-table-container {}.wiz-table-body {position:relative;padding:10px 0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;}.wiz-table-body table {margin:0;outline:none;}td,th {outline:none;}undefinedundefined</style><link rel="stylesheet" charset="utf-8" name="wiz_tmp_editor_style" href="../css/github2.css"><link rel="stylesheet" charset="utf-8" name="wiz_tmp_editor_style" href="../css/wizToc.css"><style id="wiz_code_style">.wiz-code-container{position: relative; padding:8px 0; margin: 5px 25px 5px 5px;text-indent:0;}.CodeMirror {font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; color: black; font-size: 10pt; font-size: 0.83rem}.CodeMirror-lines {padding: 4px 0;}.CodeMirror pre {padding: 0 4px;}.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {background-color: white;}.CodeMirror-gutters {border-right: 1px solid #ddd; background-color: #f7f7f7; white-space: nowrap;}.CodeMirror-linenumbers {}.CodeMirror-linenumber {padding: 0 3px 0 5px; min-width: 20px; text-align: right; color: #999; white-space: nowrap;}.CodeMirror-guttermarker {color: black;}.CodeMirror-guttermarker-subtle {color: #999;}.CodeMirror-cursor {border-left: 1px solid black; border-right: none; width: 0;}.CodeMirror div.CodeMirror-secondarycursor {border-left: 1px solid silver;}.cm-fat-cursor .CodeMirror-cursor {width: auto; border: 0 !important; background: #7e7;}.cm-fat-cursor div.CodeMirror-cursors {z-index: 1;}.cm-animate-fat-cursor {width: auto; border: 0; -webkit-animation: blink 1.06s steps(1) infinite; -moz-animation: blink 1.06s steps(1) infinite; animation: blink 1.06s steps(1) infinite; background-color: #7e7;}@-moz-keyframes blink {  0% {}  50% { background-color: transparent; }  100% {}}@-webkit-keyframes blink {  0% {}  50% { background-color: transparent; }  100% {}}@keyframes blink {  0% {}  50% { background-color: transparent; }  100% {}}.CodeMirror-overwrite .CodeMirror-cursor {}.cm-tab { display: inline-block; text-decoration: inherit; }.CodeMirror-rulers {position: absolute; left: 0; right: 0; top: -50px; bottom: -20px; overflow: hidden;}.CodeMirror-ruler {border-left: 1px solid #ccc; top: 0; bottom: 0; position: absolute;}.cm-s-default .cm-header {color: blue;}.cm-s-default .cm-quote {color: #090;}.cm-negative {color: #d44;}.cm-positive {color: #292;}.cm-header, .cm-strong {font-weight: bold;}.cm-em {font-style: italic;}.cm-link {text-decoration: underline;}.cm-strikethrough {text-decoration: line-through;}.cm-s-default .cm-keyword {color: #708;}.cm-s-default .cm-atom {color: #219;}.cm-s-default .cm-number {color: #164;}.cm-s-default .cm-def {color: #00f;}.cm-s-default .cm-variable,.cm-s-default .cm-punctuation,.cm-s-default .cm-property,.cm-s-default .cm-operator {}.cm-s-default .cm-variable-2 {color: #05a;}.cm-s-default .cm-variable-3 {color: #085;}.cm-s-default .cm-comment {color: #a50;}.cm-s-default .cm-string {color: #a11;}.cm-s-default .cm-string-2 {color: #f50;}.cm-s-default .cm-meta {color: #555;}.cm-s-default .cm-qualifier {color: #555;}.cm-s-default .cm-builtin {color: #30a;}.cm-s-default .cm-bracket {color: #997;}.cm-s-default .cm-tag {color: #170;}.cm-s-default .cm-attribute {color: #00c;}.cm-s-default .cm-hr {color: #999;}.cm-s-default .cm-link {color: #00c;}.cm-s-default .cm-error {color: #f00;}.cm-invalidchar {color: #f00;}.CodeMirror-composing { border-bottom: 2px solid; }div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}.CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }.CodeMirror-activeline-background {background: #e8f2ff;}.CodeMirror {position: relative; background: #f5f5f5;}.CodeMirror-scroll {overflow: hidden !important; margin-bottom: 0; margin-right: 0; padding: 10px 0 16px; outline: none; position: relative;}.CodeMirror-sizer {position: relative; border-right: 30px solid transparent;}.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {position: absolute; z-index: 6; display: none;}.CodeMirror-vscrollbar {right: 0; top: 0; overflow-x: hidden; overflow-y: scroll;}.CodeMirror-hscrollbar {bottom: 0; left: 0 !important; overflow-y: hidden; overflow-x: scroll;}.CodeMirror-scrollbar-filler {right: 0; bottom: 0;}.CodeMirror-gutter-filler {left: 0; bottom: 0;}.CodeMirror-gutters {position: absolute; left: 0; top: -5px; min-height: 100%; z-index: 3;}.CodeMirror-gutter {white-space: normal; height: inherit; display: inline-block; vertical-align: top; margin-bottom: -30px;}.CodeMirror-gutter-wrapper {position: absolute; z-index: 4; background: none !important; border: none !important;}.CodeMirror-gutter-background {position: absolute; top: 0; bottom: 0; z-index: 4;}.CodeMirror-gutter-elt {position: absolute; cursor: default; z-index: 4; text-align: center;}.CodeMirror-gutter-wrapper ::selection { background-color: transparent }.CodeMirror-gutter-wrapper ::-moz-selection { background-color: transparent }.CodeMirror-lines {cursor: text; min-height: 1px;}.CodeMirror pre {-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; border-width: 0; background: transparent; font-family: inherit; font-size: inherit; margin: 0; white-space: pre; word-wrap: normal; line-height: inherit; color: inherit; z-index: 2; position: relative; overflow: visible; -webkit-tap-highlight-color: transparent; -webkit-font-variant-ligatures: contextual; font-variant-ligatures: contextual;}.CodeMirror-wrap pre {word-wrap: break-word; white-space: pre-wrap; word-break: normal;}.CodeMirror-linebackground {position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 0;}.CodeMirror-linewidget {position: relative; z-index: 2; overflow: auto;}.CodeMirror-widget {}.CodeMirror-rtl pre { direction: rtl; }.CodeMirror-code {outline: none;}.CodeMirror-scroll,.CodeMirror-sizer,.CodeMirror-gutter,.CodeMirror-gutters,.CodeMirror-linenumber {-moz-box-sizing: content-box; box-sizing: content-box;}.CodeMirror-measure {position: absolute; width: 100%; height: 0; overflow: hidden; visibility: hidden;}.CodeMirror-cursor {position: absolute; pointer-events: none;}.CodeMirror-measure pre { position: static; }div.CodeMirror-cursors {visibility: hidden; position: relative; z-index: 3;}div.CodeMirror-dragcursors {visibility: visible;}.CodeMirror-focused div.CodeMirror-cursors {visibility: visible;}.CodeMirror-selected { background: #d9d9d9; }.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }.CodeMirror-crosshair { cursor: crosshair; }.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background: #d7d4f0; }.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }.cm-searching {background: #ffa; background: rgba(255, 255, 0, .4);}.cm-force-border { padding-right: .1px; }@media print {  .CodeMirror div.CodeMirror-cursors {visibility: hidden;}}.cm-tab-wrap-hack:after { content: ""; }span.CodeMirror-selectedtext { background: none; }.CodeMirror-activeline-background, .CodeMirror-selected {transition: visibility 0ms 100ms;}.CodeMirror-blur .CodeMirror-activeline-background, .CodeMirror-blur .CodeMirror-selected {visibility:hidden;}.CodeMirror-blur .CodeMirror-matchingbracket {color:inherit !important;outline:none !important;text-decoration:none !important;}</style><style name="wiz_tmp_editor_style">.wiz-code-tools {display:none;position: absolute; top: -32px; right: 0; opacity: .95; z-index: 10;}.CodeMirror-focused .wiz-code-tools {display:block;}.CodeMirror-sizer {border-right: 0 !important;}body pre.prettyprint {padding:0;}body pre.prettyprint code {white-space: pre;}body pre.prettyprint.linenums {box-shadow:none; overflow: auto;-webkit-overflow-scrolling: touch;}body pre.prettyprint.linenums ol.linenums {box-shadow: 40px 0 0 #FBFBFC inset, 41px 0 0 #ECECF0 inset; padding: 10px 10px 10px 40px !important;}</style><style name="wiz_tmp_editor_style">.CodeMirror-cursors {visibility: hidden !important;}</style></head>
+
+<body spellcheck="false" class="markdown-body" contenteditable="false"><p><div class="wiz_toc_layer"><a class="wiz_toc h1" href="#三、编译任务管理">三、编译任务管理</a><br><a class="wiz_toc h2" href="#操作指导">操作指导</a><br><a class="wiz_toc h3" href="#新建编译任务">新建编译任务</a><br><a class="wiz_toc h2" href="#任务列表">任务列表</a><br><a class="wiz_toc h3" href="#○编译任务">○编译任务</a><br><a class="wiz_toc h3" href="#○已删除任务">○已删除任务</a><br><a class="wiz_toc h3" href="#○收藏的任务">○收藏的任务</a></div><a href="#wizToc"></a></p>
+
+<h1 id="三、编译任务管理">三、编译任务管理</h1>
+
+<p>只有在训练任务管理页面新建的编译任务才会出现在编译任务页面，在训练流程主界面进行的编译任务不出现的编译任务页面</p>
+
+<h2 id="操作指导">操作指导</h2>
+
+<h3 id="新建编译任务">新建编译任务</h3>
+
+<p>新建编译任务包括三步：选择模型 -- 确认编译模型 -- 填写编译任务详情</p>
+
+<p><strong>步骤一：选择模型</strong> <br>
+    1）在编译界面点击“新建编译任务” <br>
+    2）跳转到“选择模型”页面，页面内容包含“全部训练任务”列表和“收藏的任务”列表，两个列表的内容相同 <br>
+    3）选择需要编译的模型 <br>
+    注意：在选择过程中，列表上面实时以显示“已选x个模型”和“模型大小xxM”；最多只能选择8个模型，单个模型大小不能超过20M</p>
+
+<p><strong>步骤二、确认待编译模型</strong> <br>
+    1）点击“下一步”进入“确认待编译的模型”页面  <br>
+    2）默认展示“已选训练任务”列表；包括“序号”(备注：按“开始时间”排序)、训练名称、模型名称、运行状态、训练时间（默认展示“开始时间”）、训练数据、训练配置 <br>
+    3）可点击“上一步（返回上一步）”、“下一步（进入“编写编译任务详情”页面）”、“取消（回到“编译任务管理”页面）”三个按钮。</p>
+
+<p><strong>步骤三：填写编译任务详情</strong> <br>
+    1）点击“下一步”后 进入“填写编译任务详情”页面 <br>
+    2）填写“编译任务名称”和“任务描述” <br>
+    3）可点击“上一步（返回上一步）”、“确定（开始编译，并在编译任务管理下新增一条记录）”、“取消（回到“编译任务管理”页面）”三个按钮。</p>
+
+<p>备注：默认按照编译时间倒序排列，最新的编译任务排在第一个。编译结束后，自动刷新页面更新编译状态。</p>
+
+<h2 id="任务列表">任务列表</h2>
+
+<h3 id="○编译任务">○编译任务</h3>
+
+<p><strong>1.收藏：</strong>点击icon，变成实心之后，该条记录收藏成功，用户可以在“已收藏任务”中进行查看</p>
+
+<p><strong>2.编译任务名称：</strong>该列表下展示用户在新建编译任务第三步填写的“”</p>
+
+<p><strong>3.任务描述：</strong>该列表下展示用户在新建编译任务第三步填写的“”</p>
+
+<p><strong>4.编译状态：</strong>该列表包括以下字段：</p>
+
+<div class="wiz-table-container" style="position: relative; padding: 0px;"><div class="wiz-table-body"><table>
+    <thead>
+    <tr>
+        <th>字段</th>
+        <th>释义</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+        <td>等待编译</td>
+        <td>已创建编译任务，还未开始编译</td>
+    </tr>
+    <tr>
+        <td>编译成功</td>
+        <td>编译任务编译成功</td>
+    </tr>
+    <tr>
+        <td>编译失败</td>
+        <td>编译未通过，显示一个感叹号icon</td>
+    </tr>
+    </tbody></table></div></div>
+
+
+<p><strong>5.模型列表：</strong>单元格内以超链接的形式显示模型个数，点击模型个数后，展示模型列表</p>
+
+<p><strong>6.性能指标：</strong>速度（单位：帧/秒）；带宽消耗。显示方式为：速度：100帧/秒</p>
+
+<p><strong>7.开始时间：</strong>用户可在该列表下查看编译任务开始时间</p>
+
+<p><strong>8.操作：</strong>该列表包括以下字段：</p>
+
+<div class="wiz-table-container" style="position: relative; padding: 0px;"><div class="wiz-table-body"><table>
+    <thead>
+    <tr>
+        <th>字段</th>
+        <th>释义</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+        <td>下载</td>
+        <td>将编译好的模型下载到本地（只开放给付费客户）</td>
+    </tr>
+    <tr>
+        <td>删除</td>
+        <td>删除编译任务，删除后的任务放到“”列表</td>
+    </tr>
+    <tr>
+        <td>demo</td>
+        <td>编译后模型效果可视化，在编译任务页面点击操作下的“demo”“模拟器demo”页面</td>
+    </tr>
+    </tbody></table></div></div>
+
+
+<h3 id="○已删除任务">○已删除任务</h3>
+
+<p><strong>1.恢复：</strong>点击后，该训练任务重新出现在“编译任务”列表中</p>
+
+<p><strong>2.其他字段：</strong>和“编译任务”列表完全一致</p>
+
+<h3 id="○收藏的任务">○收藏的任务</h3>
+
+<p><strong>1.取消收藏：</strong>点击icon，变成空心之后，该条记录从“已收藏任务”列表中删除</p>
+
+<p><strong>2.其他字段：</strong>和“编译任务”列表完全一致</p><wiz_tmp_tag id="wiz-table-range-border" contenteditable="false" style="display: none;"><div id="wiz-table-col-line" style="display: none;"></div><div id="wiz-table-row-line" style="display: none;"></div><div id="wiz-table-range-border_start" style="display: none;"><div id="wiz-table-range-border_start_top"></div><div id="wiz-table-range-border_start_right"></div><div id="wiz-table-range-border_start_bottom"></div><div id="wiz-table-range-border_start_left"></div><div id="wiz-table-range-border_start_dot"></div></div><div id="wiz-table-range-border_range" style="display: none;"><div id="wiz-table-range-border_range_top"></div><div id="wiz-table-range-border_range_right"></div><div id="wiz-table-range-border_range_bottom"></div><div id="wiz-table-range-border_range_left"></div><div id="wiz-table-range-border_range_dot"></div></div></wiz_tmp_tag></body></html>

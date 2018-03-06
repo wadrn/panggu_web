@@ -1,0 +1,24 @@
+{
+    "remotePath": "/data/sdc/dongmin/go/src/train_cnn/static/web",
+    "host": "10.19.19.23",
+    "username": "dongmin",
+    "password": "888",
+    "port": 22,
+    "secure": false,
+    "protocol": "sftp",
+    "uploadOnSave": true,
+    "passive": false,
+    "debug": false,
+    "privateKeyPath": null,
+    "passphrase": null,
+    "ignore": [
+        "\\.vscode",
+        "\\.git",
+        "\\.DS_Store"
+    ],
+    "generatedFiles": {
+        "uploadOnSave": false,
+        "extensionsToInclude": [],
+        "path": ""
+    }
+}

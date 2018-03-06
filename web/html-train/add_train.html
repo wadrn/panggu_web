@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+	<link rel="stylesheet" href="../css/datepicker.css">
+    <link rel="stylesheet" href="../css/validationEngine.jquery.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_er2vbuhtx4po80k9.css">
+  </head>
+  <style>
+	#svg_task_svg_scrool{
+		position: relative;
+	}
+	.svgdiv{
+		overflow: hidden;
+	}
+	._main ._main_con_3
+		border-right: 1px solid rgba(151,151,151,.2)
+	}
+	._main ._main_con_4{
+		left: 623px;
+	}
+	.bpmn-top{
+		-webkit-box-shadow: none;
+		box-shadow: none;
+		border: 1px solid rgba(151,151,151,.2);
+		border-left-width: 0;
+		border-bottom-width: 0;
+	}
+	#_data_page{
+		padding: 0px !important;
+	}
+	.img{
+		cursor: pointer;
+	}
+  </style>
+  <body>
+      <div class="_main">
+          <div id="_nav"></div>
+          <div class="_main_con_3" id="_main_con_3">
+              <div class="bpmn-top" style="position:relative;"></div>
+              <div class="svgdiv" id="svg_task" style="position: relative;"></div>
+          </div>
+          <div class="_main_con_4" id="_main_con_4">
+              <div class="overhide" style="top: 15px;left:15px; right:15px; min-width:1260px;">
+                  <div class="cfg_test_data" id="cfg_test_data">
+                  </div>
+              </div>
+          </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="../js/requirefile.js"></script>
+  <script type="text/javascript">
+      shownav({
+          oname:'训练',
+          tname:'新建训练'
+      })
+	  
+	  //$("#svg_task").css("height",$("#_main_con_3").innerHeight()-61);
+      var data = {
+          data:[
+              {
+                  name:"选择数据",
+                  isclick:true,
+                  click:'train_fun.show_data()'
+              },
+              {
+                  name:"选择模型",
+                  isclick:false,
+                  click:'train_fun.show_model()'
+              },
+              {
+                  name:"配置数据",
+                  isclick:false,
+                  click:'train_fun.setting_data()'
+              },
+              {
+                  name:"配置模型",
+                  isclick:false,
+                  click:'train_fun.setting_train()'
+              },
+              {
+                  name:"开始训练",
+                  isclick:false,
+                  click:'train_fun.start_tash()'
+              },
+//              {
+//                  name:"编译",
+//                  isclick:false,
+//                  click:'train_fun.show_data()'
+//              }
+          ],
+          domid: "svg_task" ,
+          cur: 0
+      }
+      var test_flow = workflow(data);
+      //test_flow.toCur(4)
+
+
+      var pingtai_page =0 ;
+      var my_page =0;
+      var curtab =0 ;
+
+      getiddata(function(){
+          if(_g_status == 1){
+              train_fun.show_model()
+          }else if(_g_status == 2){
+              train_fun.setting_data()
+          }else if(_g_status == 3){
+              train_fun.setting_train()
+          }else if(_g_status == 4){
+              train_fun.show_train()
+          }else{
+              train_fun.show_data()
+          }
+      })
+
+
+      function getNextPage(id,page_num){    //获取上一页
+          if(id == 'pingtai' && (pingtai_page+1) < page_num){
+              pingtai_page++;
+              train_fun.show_data(pingtai_page,my_page);
+          }else if(id == 'my' && (pingtai_page+1) < page_num){
+              my_page++;
+              train_fun.show_data(pingtai_page,my_page);
+          }
+
+      }
+
+      function getPrePage(id){      // 获取下一页
+          if(id == 'pingtai' && pingtai_page> 0){
+
+              pingtai_page--;
+              train_fun.show_data(pingtai_page,my_page);
+          }else if(id == 'my' && my_page > 0) {
+              my_page--;
+              train_fun.show_data(pingtai_page, my_page);
+          }
+      }
+      function _switchTab(dom){
+          $(id).addClass('blue').siblings().removeClass('blue')
+
+          curtab =$(dom).attr('id').substr(3);
+          $('.seltadata_data').hide()
+          $('.seltadata_data').eq(curtab).show()
+      }
+      function ajaxchart(){
+          var dom = document.getElementById('_train_chart_tab');
+          var e = window.event;
+          var id = e.target.id;
+          var btns = dom.children;
+          for(var i=0;i<btns.length;i++){
+              Class.removeClass(btns[i],'blue');
+          }
+          Class.addClass(e.target,'blue');
+          ajaxget(interface.train.judge_tboard_curve+'curve_type='+id,function(data){
+              monitor_chart({domid:'_train_chart_con',data:data})
+          })
+      }
+
+      $('body').on('click','.seltadata_btn',function(){
+            $(this).addClass('blue').siblings().removeClass('blue')
+            var index = $(this).index()
+            $('#task_data').find('.seltadata_data').hide()
+            $('#task_data').find('.seltadata_data').eq(index).show()
+      })
+
+  </script>
+
+</html>

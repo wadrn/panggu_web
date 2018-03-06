@@ -1,0 +1,42 @@
+.register_form div label{
+    display: inline-block;
+    text-align: right;
+    width:20%;
+    color:#fff;
+}
+.register_form > div{
+    position: relative;
+    margin-bottom:5px;
+}
+.register_error_tooltip{
+    display: none;
+    color:indianred;
+    font-size:10px;
+    position:absolute;
+    top:40px;
+    left:240px;
+}
+.updateinfo_list > div{
+    position: relative;
+    margin-bottom:20px;
+}
+.updateinfo_error_tooltip{
+    display: none;
+    color:indianred;
+    font-size:10px;
+    position:absolute;
+    top:30px;
+    left:240px;
+}
+.uploadlist >div{
+    position: relative;
+    margin-bottom:25px;
+}
+.upload_tooltip{
+    display: none;
+    color:indianred;
+    font-size:10px;
+    position:absolute;
+    top:30px;
+    left:240px;
+}

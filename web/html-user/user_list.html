@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_er2vbuhtx4po80k9.css">
+  </head>
+  <body>
+      <div class="_main">
+          <div id="_nav"></div>
+		  <div class="search_div" id="_searchdata" style="position: absolute; top: 0px;left:140px;;"></div>
+
+          <div class="_main_con_5" id="_data_con">
+
+            <div class="pd20">
+
+                <!--<div class="mb20">
+                    <h4 class="v h bbottom">
+                        <span class="titile" id="_r_title"></span>
+                        <ul class="v breadnav1">
+                            <li><a href="#">首页</a></li>
+                            <li>用户管理</li>
+                        </ul>
+                    </h4>
+                </div>-->
+
+                <div class="oz bgpd15" style="margin-bottom: 1px; background: rgba(255,255,255,0);">
+					<a href="javascript:;" onclick="add_users()" class="v btn blue normal_btn">批量添加用户</a>
+                    <a href="javascript:;" onclick="del_users()" class="v btn green normal_btn" style="float: right;">批量删除</a>
+                </div>
+                <div id="_data_list"></div>
+
+            </div>
+          </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="../js/requirefile.js"></script>+
+
+  <script type="text/javascript">
+
+      shownav({
+          oname:'用户',
+          tname:'用户管理'
+      })
+
+	eventBind();
+
+      var d_form = data_form()
+      d_form.data = [
+          {
+              desc:'用户名',
+              type:"text",
+              name:"keyword",
+              value:'',
+              ph:'',
+          },
+          {
+              desc:'用户类型',
+              type:"select",
+              name:"ulevel",
+              data:[
+                  {
+                      key:'',
+                      text:'全部'
+                  },
+                  {
+                      key:'1',
+                      text:'普通用户'
+                  },
+                  {
+                      key:'2',
+                      text:'客户'
+                  },
+                  {
+                      key:'3',
+                      text:'管理员'
+                  }
+              ],
+              value:'',
+              ph:'',
+          },
+          {
+              desc:'search',
+              type:"sbtn",
+              text:'搜索',
+              fun:'searchdata()',
+              name:"username",
+              value:'',
+              ph:'',
+          }
+      ]
+      d_form.datahtml('_searchdata')
+
+
+      var user_type = ['浏览用户','普通用户','客户','管理员'];
+      var obj = {
+          module:'user',
+          rendcall:function(list){
+              if(!list.data.length){
+                  if(document.getElementById('default_show')){
+                      document.getElementById('default_show').innerHTML = '没有找到相关内容，换个搜索条件试试？';
+                  }
+              }
+          },
+          url:interface.user.list,
+          domid:'_data_list',
+          data:{list:0},
+          title:[
+              {
+                  title:'<input type="checkbox" class=" _select_all cuscheck" style="cursor:pointer;" id="user_check"/><label for="user_check" >',
+				  style: "width: 40px; text-align: center;",
+                  callback:function(data){
+                      return '<input id="check_'+data+'" type="checkbox" name="box'+data+'" class="box cuscheck" style="cursor:pointer;"/><label for="check_'+data+'" >'
+                  }
+              },
+              "用户名",
+              {
+                  title:'认证状态',
+                  callback:function(data){
+                      switch(data){
+                          case '浏览用户':
+                              return '<span style="color: #0099ff">'+data+'</span>'
+                              break;
+                          case '普通用户':
+                              return '<span style="color: #00cccc">'+data+'</span>'
+                              break;
+                          case '客户':
+                              return '<span style="color: #66cc00">'+data+'</span>'
+                              break;
+                          case '管理员':
+                              return '<span style="color: #cc9900">'+data+'</span>'
+                              break;
+                      }
+                  }
+              },
+              {
+                  title:'权限',
+                  callback:function(data){
+                      return '<a href="javascript:;" onclick="showinfo(this.name)" name="'+data[0]+'__'+data[1]+'">查看</a>'
+                  }
+              },
+              {
+                  title:'操作',
+                  callback:function(data){
+                             return '<a href="javascript:;" onclick="del_user(this.id)" id="del'+data[0]+'">删除</a> / '+
+                             '<a href="javascript:;" onclick="update_user_level(this.id)" id="auth'+data[0]+'+_'+data[1]+'" name="'+data[2]+'">授权</a>'
+
+                  }
+              }
+          ],
+          datakey:[
+              'id',
+              "name",
+              "user_level",
+              ['name',"ulevel"],
+              ["id","ulevel",'name']
+          ]
+      }
+      var _list = datalist(obj)
+
+      function searchdata(){
+          _list.data.keyword = document.getElementsByName('keyword')[0].value
+          var select = document.getElementsByName('ulevel')[0];
+          var index= select.selectedIndex;
+          _list.data.ulevel = select.options[index].value;
+          _list.page = 1
+          _list.ajaxpagedata(function(data){
+			if(data.data.detail.length == 0){
+                errorPrompt("没有找到相关内容，换个搜索条件试试？");
+            }
+            _list.eventinit();
+		  })
+      }
+
+      function showinfo(data){
+          var arr =data.split("__");
+          var name = arr[0];
+          var ulevel = arr[1];
+          var g_popup = tool_popup()
+          g_popup.callback = function(){
+          }
+          g_popup.title = name+' '+user_type[ulevel]+' 权限列表'
+          g_popup.con = '<div id="showinfohtml">'+'</div>'
+          g_popup.style_popup_con += 'min-height:300px;'
+          g_popup.show();
+          var url = interface.user.permissionlist
+          ajaxpost(url,'ulevel='+ulevel,function(data){
+              if(data.error == 0){
+                  var permission = data.data.permission;
+                  var html = ''
+                  for(var i=0;i<permission.length;i++){
+                      var authority = permission[i].operate + permission[i].restype
+                      var role = permission[i].role || '1';
+                      if(authority == '训练模型' ||authority == '编译模型'){
+                          html += '<div class="v input_2">'
+                          html += '<input type="checkbox" name="是" checked disabled="true">'
+                          html += '<label class="">'+authority+'</label>'
+                          html += '<input  value="'+role+'" disabled="true"/>'
+                          html += '</div>'
+                      }else{
+                          html += '<div class="v input_2">'
+                          html += '<input type="checkbox" name="是" checked disabled="true">'
+                          html += '<label class="">'+authority+'</label>'
+                          html += '</div>'
+                      }
+                  }
+                  document.getElementById('showinfohtml').innerHTML = html;
+              }else{
+                  console.log(data['msg']);
+              }
+          })
+
+      }
+
+      function update_user_level(elementId){
+          var popup = tool_popup()
+          var attr = elementId.split('_')
+          var userId = attr[0].substr(4);
+          var oldlevel = attr[1]
+
+          var name = document.getElementById(elementId).name;
+
+          popup.callback = function(){
+              var newlevel
+              var url =interface.user.permissionupdate
+              var radios = document.getElementsByName('authority')
+              for(var i=0;i<radios.length;i++){
+                  if(radios[i].checked == true){
+                      if(radios[i].id == 'browser'){
+                          newlevel = 0
+                      }else if(radios[i].id == 'general'){
+                          newlevel = 1
+                      }else{
+                          newlevel = 2
+                      }
+                      break;
+                  }
+              }
+              var datastr = "uId="+userId+"&updatelevel="+newlevel+"&flag=1"
+              ajaxpost(url,datastr,function(data){
+                  if(data.error ==0){
+                      succPrompt("授权成功");
+                      var curpage = _list.page;
+                      console.log('curpage='+curpage);
+                      _list.page = curpage;
+                      _list.ajaxpagedata(function(){
+                          _list.eventinit()
+                      });
+                  }else{
+                      errorPrompt(data['message'])
+                  }
+              })
+          }
+          popup.title = name +' 授权';
+          popup.con = '<div id="empower">'+'</div>'
+          var html = '';
+          popup.style_popup_con += 'min-height:300px;height:300px;'
+          popup.show();
+          html += '<div class="v input_2">'
+          html += '<input type="radio" name="authority" id="general">'
+          html += '<label class="w30" for="general">'+'普通用户'+'</label>'
+          html += '</div>'
+          html += '<div class="v input_2">'
+          html += '<input type="radio" name="authority" id="client">'
+          html += '<label class="w30" for="client">'+'客户'+'</label>'
+          html += '</div>'
+          document.getElementById('empower').innerHTML = html
+
+          var radios = document.getElementsByName('authority')
+          for(var i=0;i<radios.length;i++){
+              if(i == oldlevel){
+                  radios[i].checked = true
+                  break
+              }
+          }
+      }
+
+      function del_user(elementId){
+          walert("是否删除",function(){
+              var url = interface.user.userdelete;
+              var delList=[]
+              var userid = elementId.substr(3);
+              delList.push(userid);
+              var jsonstr =JSON.stringify(delList);
+
+              var datastr = "ids="+jsonstr
+              ajaxpost(url,datastr,function(data){
+                  if(data.error ==0){
+                      succPrompt("删除成功");
+                      _list.ajaxpagedata();
+                  }else{
+                      errorPrompt(data['message']);
+                  }
+              })
+          })
+      }
+
+      function del_users(){
+          var checkboxs = document.getElementsByClassName('box')
+          var delList=[]
+          for(var i=0;i<checkboxs.length;i++){
+              if(checkboxs[i].checked == true){
+                  var id = checkboxs[i].name.substr(3)
+                  delList.push(id)
+              }
+          }
+          walert("是否批量删除",function(){
+              var url = interface.user.userdelete
+              if(delList.length ==0){
+                  alert("没有选中任何用户")
+                  return
+              }
+              var jsonstr =JSON.stringify(delList)
+              var datastr = "ids="+jsonstr
+              ajaxpost(url,datastr,function(data){
+                  if(data.error ==0){
+                      succPrompt("删除成功");
+                      _list.ajaxpagedata(function(){
+						_list.eventinit()
+					  });
+                  }else{
+                      errorPrompt(data['message']);
+                  }
+              })
+          })
+      }
+
+      function add_users(){
+          var popup = tool_popup()
+          popup.title = '批量创建用户'
+          popup.con = '<div id="add_user">'+'</div>'
+          var html = '';
+          popup.style_popup_con += 'height:400px;'
+          popup.show();
+          html += '<div class="v input_2 mb10" style="margin-top: 50px;padding-right: 50px;">'
+          html += '<label class="w30">输入用户名<span style="color:#f00"> *</span> </label>'
+          html += '<textarea name="" class="text w70" cols="30" rows="6" style="border: 1px solid #ccc;" id="new_users"></textarea>'
+          html += ' <p class="info pdw30"></p>'
+          html += '</div>'
+          document.getElementById('add_user').innerHTML = html
+          popup.callback = function(){
+              var new_users_str = document.getElementById('new_users').value;
+              var new_users = new_users_str.split(',');
+              console.log(new_users)
+              var new_users_json = JSON.stringify(new_users);
+              var url = interface.user.create
+              datastr = "name="+new_users_json
+              ajaxpost(url,datastr,function(data){
+                  if(data.error == 0){
+                      succPrompt("创建用户成功");
+                      _list.ajaxpagedata(function(){
+						_list.eventinit()
+					  });
+                  }else{
+                      alert(data['msg'])
+                  }
+              })
+          }
+      }
+	  
+	  function eventBind(){
+		
+		$(document).on('click','#_data_list ._select_all',function(e){
+			var check_status = $(this).prop("checked")
+			if(check_status){
+				$("#_data_list").find("tbody .box").each(function(){
+					$(this).prop("checked",true)
+				});
+			}
+			else{
+				$("#_data_list").find("tbody .box").each(function(){
+					$(this).prop("checked",false)
+				});
+			}
+		});
+	  }
+  </script>
+
+</html>

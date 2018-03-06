@@ -1,0 +1,40 @@
+.date-picker-wp {
+display: none;
+position: absolute;
+background: #fff;
+left: 40px;
+top: 40px;
+border-top: 4px solid #3879d9;
+}
+.date-picker-wp table {
+border: 1px solid #ddd;
+background: #fff;
+border-collapse:separate;
+border-spacing: inherit;
+}
+.date-picker-wp td {
+background: #fafafa;
+width: 22px;
+height: 22px;
+line-height: 22px;
+border: 1px solid #ccc;
+font-size: 12px;
+text-align: center;
+border-radius: 2px;
+padding: 3px;
+margin: 2px;
+}
+.date-picker-wp .hand:hover {
+background: #008CD6;
+color: #fff;
+}
+.date-picker-wp td.noborder {
+border: none;
+background: none;
+}
+.date-picker-wp td a {
+color: #1c93c4;
+text-decoration: none;
+}
+.strong {font-weight: bold}
+.hand {cursor: pointer; color: #008CD6}

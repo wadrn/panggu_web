@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+    <div class="search_div" id="_searchdata" style="position: absolute; top: 0px;left:130px;"></div>
+    <div class="_main_con_5" id="_data_con">
+
+        <div class="pd20">
+
+            <div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile" id="_r_title"></span>
+                    <ul class="v breadnav1" id="_r_bnav">
+                        <li><a href="#">首页</a></li>
+                        <li>数据管理</li>
+                    </ul>
+                </h4>
+            </div>
+
+            <!--<div class="search_div" id="">-->
+                <!--<a href="javascript:;" class="v btn green" style="float: right;display: inline-block;" onclick="upload_raw()">上传原始数据</a>-->
+            <!--</div>-->
+            <div class="oz bgpd15" style="margin-bottom: 1px;">
+                <span id="status_id"></span>
+                <span id="batch_operation" style="float: right;margin-top: 5px;">
+                    <a href="javascript:;" class="v btn green normal_btn" onclick="upload_raw()">上传原始数据</a>
+                    <a href="javascript:;" class="v btn red normal_btn"  onclick="del_datas()">批量删除</a>
+                </span>
+        </div>
+            <div class="bgpd15" id="_data_list"></div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+
+    shownav({
+        oname:'数据',
+        tname:'用户上传数据'
+    })
+
+    var d_form = data_form();
+    d_form.data=[
+        {
+            desc:'数据描述',
+            type:"text",
+            name:"desc",
+        },
+        {
+            desc:'创建时间  开始时间',
+            type:"date",
+            name:"start_time",
+        },
+        {
+            desc:'结束时间',
+            type:"date",
+            name:"end_time",
+        },
+        {
+            desc:'search',
+            type:"sbtn",
+            text:'搜索',
+            fun:'searchdata()',
+            name:"username",
+            value:'',
+        }
+    ];
+    d_form.datahtml('_searchdata');
+
+
+    var upload_status = ['原始数据上传中','……','原始数据上传成功','原始数据上传成功'];
+
+    var obj = {
+        module:'userdata',
+        rendcall:function(list){
+            if(!list.data.length){
+                if(document.getElementsByName('desc') == '' && document.getElementsByName('start_time')=='' && document.getElementsByName('end_time')==''){
+                    if(document.getElementById('default_show')){
+                        document.getElementById('default_show').innerHTML = '您还未上传任何数据，点击'+'<a style="text-decoration: underline;" onclick="upload_raw()">上传原始数据</a>'+'按钮去上传吧~';
+                    }
+                }else{
+                    if(document.getElementById('default_show')){
+                        document.getElementById('default_show').innerHTML = '没有找到相关内容，换个搜索条件试试？';
+                    }
+                }
+            }
+        },
+        url:interface.data.rawlist,
+        domid:'_data_list',
+        data:{list:0,status:1},
+        title:[
+            {
+                title:'<input type="checkbox" onclick="click_checkbox(this)"/>'+' 全选',
+                style:'width:50px',
+                callback:function(data){
+                    return '<input type="checkbox" name="box_'+data+'" class="checkbox"/>'
+                }
+            },
+            {
+                title:"创建时间",
+                style:'width:130px',
+                callback:function(data){
+                    return '<span>'+data+'</span>'
+                }
+            },
+            {
+                title:'数据描述',
+                style:'width:220px',
+                callback:function(data){
+                    return '<span title="'+data+'" style="display: inline-block; width:100%;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;">'+data+'</span>'
+                }
+            },
+            {
+              title:'图片数',
+              callback:function(data){
+                  var pic_num = data[0];
+                  var id = data[1];
+                  return '<span id="picnum'+id+'">'+pic_num+'</span>'
+              }
+            },
+            {
+                title:'文件大小',
+                callback:function(data){
+                    var size=data[0];
+                    var id = data[1];
+                    return '<span id="size'+id+'">'+size+'</span>'
+                }
+            },
+            {
+                title:'状态',
+                callback:function(data){
+                    var id = data[0];
+                    var status = data[1];
+                    if(data[2] != ''){
+                        return '<span id="status'+id+'">'+data[2]+'</span>'
+                    }else{
+                        return '<span id="status'+id+'">'+upload_status[status]+'</span>'
+                    }
+                }
+            },
+            {
+                title:'进度',
+                style:'width:50px',
+                callback:function(data){
+                    var id = data[0];
+                    var status =data[1];
+                    var desc =data[2];
+                        var url = interface.data.upload_progress;
+                        var datastr = 'id='+id;
+                        var progress='';
+                        var timer ={};
+                        function igetdata(){
+                            ajaxpost_noloading(url,datastr,function(data){
+                                if(data.error ==0){
+                                    document.getElementById('status'+id).innerHTML = data.data.errmsg;
+                                    document.getElementById("progress"+id).innerHTML = data.data.progress+'%';
+                                    document.getElementById("size"+id).innerHTML = data.data.size;
+                                    document.getElementById("picnum"+id).innerHTML = data.data.pic_num;
+                                    if(data.data.status ==3){      //原始数据上传成功
+                                        document.getElementById('status'+id).innerHTML = data.data.errmsg;
+                                        document.getElementById('resupload_'+id).innerHTML = '<a onclick="upload_res('+"'"+desc+"'"+')" id="resupload_'+id+'">上传标注结果</a>'
+                                        document.getElementById('edit_'+id).innerHTML = '<a href="javascript:;" onclick="edit_data(this.id)">编辑</a>'
+                                        document.getElementById('del_'+id).innerHTML = '<a href="javascript:;" onclick="del_data(this.id)">删除</a>'
+                                        document.getElementById('preview_'+id).innerHTML = '<a href="javascript:;" onclick="preview()">预览</a>'
+                                    }
+                                    if(data.data.errmsg == '标注数据上传成功'){
+                                        console.log('成功')
+                                        document.getElementById('detail_'+id).innerHTML = '<a href="javascript:;" onclick="show_detail()">详情</a>'
+                                    }
+                                    if(data.data.progress == 100){
+                                        clearInterval(timer[id]);
+                                        document.getElementById('status'+id).innerHTML = data.data.errmsg;
+                                    }
+                                    if(data.data.success == false){
+                                        clearInterval(timer[id]);
+                                        document.getElementById('status'+id).innerHTML = data.data.errmsg;
+                                        document.getElementById("progress"+id).innerHTML = '-';
+                                        document.getElementById("picnum"+id).innerHTML = '-';
+                                        document.getElementById("size"+id).innerHTML = '-';
+                                    }
+                                }
+                            })}
+
+                        igetdata();
+
+                    timer[id] = setInterval(function(){
+                        igetdata()
+                    },5000);
+
+                    return '<span class="progress" id="progress'+id+'">'+progress+'</span>'
+                    }
+            },
+            {
+              title:'上传操作',
+              callback:function(data){
+                  if(data[0]  == 3){
+                      return '<span id="resupload_'+data[1]+'"><a onclick="upload_res('+"'"+data[2]+"'"+')">上传标注结果</a></span>'
+                  }else{
+                      return '<span id="resupload_'+data[1]+'"></span>'
+                  }
+              }
+            },
+            {
+                title:'管理',
+                callback:function(data){
+                    if(data[1] == 3){
+                        return '<span id="preview_'+data[0]+'"><a href="javascript:;" onclick="preview()">预览</a></span> ／ '+
+                            '<span id="detail_'+data[0]+'">详情</span> ／ '+
+                            '<span id="edit_'+data[0]+'"><a href="javascript:;" onclick="edit_data(this.id)">编辑</a></span> ／ '+
+                            '<span id="del_'+data[0]+'"><a href="javascript:;" onclick="del_data(this.id)">删除</a></span>'
+                    }else{
+                        return '<span id="preview_'+data[0]+'">预览</span> ／ '+
+                            '<span id="detail_'+data[0]+'">详情</span> ／ '+
+                            '<span id="edit_'+data[0]+'">编辑</span> ／ '+
+                            '<a href="javascript:;" onclick="del_data(this.id)" id="del_'+data[0]+'">删除</a>'
+                    }
+                }
+            }
+        ],
+        datakey:[
+            'id',
+            "create_time",
+            "comment",
+            ["pic_num",'id'],
+            ["size",'id'],
+            ["id","status","errmsg"],
+            ["id",'status','comment'],
+            ["status","id","comment"],
+            ["id","status"]
+        ],
+    };
+    var _list = datalist(obj);
+
+    /*搜索*/
+    function searchdata(){
+        _list.data.desc = document.getElementsByName('desc')[0].value
+        _list.data.bind_stime = document.getElementsByName('start_time')[0].value;
+        _list.data.bind_etime = document.getElementsByName('end_time')[0].value;
+
+        _list.page = 1
+        _list.ajaxpagedata()
+    }
+    function click_checkbox(checkbox){
+        var checkboxs = document.getElementsByClassName('checkbox')
+        if(checkbox.checked == true){
+            for(var i in checkboxs){
+                checkboxs[i].checked = true
+            }
+        }else{
+            for(var i in checkboxs){
+                checkboxs[i].checked = false
+            }
+        }
+    }/*删除单条数据*/
+    function del_data(id){
+        var ele = window.event.target;
+        while(!id){
+            id = ele.id;
+            ele = ele.parentNode;
+        }
+        walert("是否删除",function(){
+            var url = interface.data.rawdelete;
+            var ids=[];
+            ids.push(id.substr(4));
+            console.log(ids);
+            var result = JSON.stringify(ids);
+            var datastr = "id="+result;
+            ajaxpost(url,datastr,function(data){
+                if(data.error ==0){
+                    succPrompt('删除成功');
+                    _list.ajaxpagedata();
+                }else{
+                    alert(data['message']);
+                }
+            })
+        })
+    }
+    /*批量删除数据*/
+    function del_datas(){
+        var checkboxs = document.getElementsByClassName('checkbox')
+        var delList=[]
+        for(var i=0;i<checkboxs.length;i++){
+            if(checkboxs[i].checked == true){
+                var id = checkboxs[i].name.substr(4)
+                delList.push(id)
+            }
+        }
+        walert("是否批量删除",function(){
+            var url = interface.data.rawdelete
+            if(delList.length ==0){
+                alert("没有选中任何数据")
+                return
+            }
+            var jsonstr =JSON.stringify(delList)
+            var datastr = "id="+jsonstr
+            ajaxpost(url,datastr,function(data){
+                if(data.error ==0){
+                    succPrompt('删除成功');
+                    _list.ajaxpagedata();
+                }else{
+                    errorPrompt(data['message']);
+                }
+            })
+        })
+    }
+
+    /*编辑数据*/
+    function edit_data(id){
+        var ele = window.event.target;
+        while(!ele.id){
+            ele = ele.parentNode;
+        }
+        id = ele.id;
+        var parent = ele.parentNode.parentNode;
+        var children = parent.children;
+        var text = children[2].innerText;
+
+
+        var popup = tool_popup()
+        popup.title = '编辑数据'
+        popup.con = '<div id="pop_data_edit">'+'</div>'
+        var html = '';
+        popup.style_popup_con += 'min-height:310px;height:310px;'
+        popup.show();
+        html += '<div class="v input_2 mb10" style="margin-top: 50px;padding-right: 50px;">'
+        html += '<label class="w30">数据描述<span style="color:#f00"> *</span> </label>'
+        html += '<textarea name="desc" class="text w70" cols="30" rows="6" style="border: 1px solid #ccc;" id="new_desc" onblur="isNewDescEmpty()">'+text+'</textarea>'
+        html += ' <p class="info pdw30"></p>'
+        html += '</div>'
+        document.getElementById('pop_data_edit').innerHTML = html
+        popup.callback = function(){
+            if(!isNewDescEmpty()){
+                return false;
+            }else{
+                var new_desc =document.getElementById('new_desc').value;
+                var url = interface.data.rawedit;
+                datastr = "id="+id.substr(5)+"&desc="+new_desc;
+                ajaxpost(url,datastr,function(data){
+                    if(data.error == 0){
+                        succPrompt('修改成功');
+                        _list.ajaxpagedata();
+                    }else{
+                        errorPrompt(data['msg'])
+                    }
+                })
+            }
+
+        }
+    }
+
+    function isNewDescEmpty(){
+        var new_desc =document.getElementById('new_desc').value;
+        if(new_desc.trim() == ''){
+            document.getElementsByName('desc')[0].style.border='red solid 1px'
+            document.getElementById('_tool_p_btn_ok').style.pointerEvents = 'none';
+            return false;
+        }else{
+            document.getElementsByName('desc')[0].style.border='#ccc solid 1px'
+            document.getElementById('_tool_p_btn_ok').style.pointerEvents = 'auto';
+            return true;
+        }
+    }
+    /*显示详情*/
+    function show_detail(){
+        var ele = window.event.target;
+        var id = ele.id;
+        while(!id){
+            ele = ele.parentNode;
+            id = ele.id;
+        }
+        var popup = tool_popup()
+        popup.init()
+        popup.con = "<div id='graph' style='width:600px;height:400px;margin:0 auto'></div>"
+        popup.callback = function(){
+        }
+        popup.title = '详情'
+        popup.style_popup_con += 'height:500px;'
+        popup.show();
+        var datastr = 'raw='+id.substr(7);
+        var url = interface.data.isresexist;
+        $.ajax({
+            url:url,
+            type:"post",
+            data:datastr,
+            dataType:'json',
+            success:function(data){
+                var idList=[];
+                if(data.error == 0){
+                    idList.push(data.res);
+                    var jsonstr = JSON.stringify(idList);
+                    var obj ={
+                        domid:'graph',
+                        url:interface.data.resdetail,
+                        dataid:jsonstr
+                    }
+                    graph(obj);
+                }else{
+                    idList.push(parseInt(id.substr(7)));
+                    var jsonstr = JSON.stringify(idList);
+                    var obj ={
+                        domid:'graph',
+                        url:interface.data.resdetail,
+                        dataid:jsonstr
+                    }
+                    graph(obj);
+                }
+            },
+            error:function(){
+                alert('接口 '+url+' 请求错误')
+            }
+        })
+    }
+
+    /*原始数据上传*/
+    function upload_raw(){
+        var popup = tool_popup();
+        popup.init()
+        popup.con = '<div id="raw_upload_pop"></div>';
+        popup.title = '上传原始数据';
+        popup.style_popup_con +='min-height:400px;height:400px;';
+        popup.button_text ='上传';
+        popup.show();
+        var html ='';
+        html += '<div class="uploadlist" style="width: 600px; margin: 0 auto;position: relative;">' +
+            '                        <div class="v input_2 mb10">' +
+            '                            <label class="w30">ftp地址<span style="color:#f00"> *</span></label>' +
+            '                            <input type="text" name="ftp"  class="text w70" value="" id="data_ftp" onblur="isFtpEmpty()">' +
+            '                            <p class="upload_tooltip"></p>' +
+            '                        </div>' +
+            '                        <div class="v input_2 mb10">' +
+            '                            <label class="w30">数据描述<span style="color:#f00"> *</span> </label>' +
+            '                            <textarea name="desc" class="text w70" cols="30" rows="6" style="border: 1px solid #ccc;" id="data_desc" onblur="isDescEmpty()"></textarea>' +
+            '                            <p class="upload_tooltip"></p>' +
+            '                        </div>' +
+                        '</div>'
+        document.getElementById('raw_upload_pop').innerHTML = html;
+        document.getElementById('_tool_p_btn_ok').style.pointerEvents = 'none';
+        popup.callback = function(){
+            if(!isFtpEmpty()){
+                return false;
+            }else if(!isDescEmpty()){
+                return false;
+            }else{
+                var data_desc = document.getElementById('data_desc').value;
+                var data_ftp =document.getElementById('data_ftp').value;
+                var url = interface.data.upload;
+                var datastr = "desc="+data_desc+"&path="+data_ftp+"&split=1";
+                ajaxpost(url,datastr,function(data){
+                    if(data.error == 0){
+                        succPrompt('上传原始数据成功');
+                        _list.ajaxpagedata();
+                    }else{
+                        errorPrompt(data['msg']);
+                    }
+                })
+            }
+        }
+    }
+    function isFtpEmpty(){
+        var data_ftp =document.getElementById('data_ftp').value;
+        if(data_ftp.trim() == ''){
+            document.getElementsByName('ftp')[0].style.border='red solid 1px'
+            $('input[name="ftp"] + .upload_tooltip').html('ftp地址不能为空')
+            $('input[name="ftp"] + .upload_tooltip').css('display','block');
+            document.getElementById('_tool_p_btn_ok').style.pointerEvents = 'none';
+            return false;
+        }else{
+            document.getElementsByName('ftp')[0].style.border='#ccc solid 1px'
+            $('input[name="ftp"] + .upload_tooltip').html('')
+            $('input[name="ftp"] + .upload_tooltip').css('display','none');
+            document.getElementById('_tool_p_btn_ok').style.pointerEvents = 'auto';
+            return true;
+
+        }
+    }
+    function isDescEmpty(){
+        var data_desc = document.getElementById('data_desc').value;
+        if(data_desc.trim() == ''){
+            document.getElementsByName('desc')[0].style.border='red solid 1px'
+            $('input[name="desc"] + .upload_tooltip').html('数据描述不能为空')
+            $('input[name="desc"] + .upload_tooltip').css('display','block');
+            document.getElementById('_tool_p_btn_ok').style.pointerEvents = 'none';
+            return false;
+        }else{
+            document.getElementsByName('desc')[0].style.border='#ccc solid 1px'
+            $('input[name="desc"] + .upload_tooltip').html('')
+            $('input[name="desc"] + .upload_tooltip').css('display','none');
+            document.getElementById('_tool_p_btn_ok').style.pointerEvents = 'auto';
+            return true;
+        }
+    }
+    /*结果数据上传*/
+    function upload_res(desc){
+        var ele = window.event.target;
+        var id = ele.id.substr(10);
+        var popup = tool_popup();
+        popup.init()
+        popup.con = '<div id="res_upload_pop"></div>';
+        popup.callback = function(){
+            var data_ftp = document.getElementById('data_ftp').value;
+            var url = interface.data.resupload;
+            var datastr = 'raw='+id+'&desc='+desc+'&path='+data_ftp;
+            ajaxpost(url,datastr,function(data){
+                if(data.error == 0){
+                    succPrompt('上传标注结果成功');
+                    _list.ajaxpagedata();
+                }else{
+                    errorPrompt(data['msg']);
+                }
+            })
+        }
+        popup.title = '上传标注结果';
+        popup.style_popup_con +='min-height:300px;height:300px;';
+        popup.button_text ='上传';
+        popup.show();
+
+        var html ='';
+        html += '<div class="v input_2 mb10" style="color: #ff0000;text-align: center;">提示：多次上传时，只保存最新一次的上传数据!</div>'
+        html += '<div class="v input_2 mb10">'+ '<label class="w30">数据描述</label>'+'<span style="height: 30px;line-height: 30px;">'+desc+'</span>'+'</div>'
+           html+= '                        <div class="v input_2 mb10">' +
+            '                            <label class="w30">ftp地址<span style="color:#f00"> *</span></label>' +
+            '                            <input type="text" name="name"  class="text w70" value="" id="data_ftp" >' +
+            '                            <p class="info pdw30"></p>' +
+            '                        </div>'
+        document.getElementById('res_upload_pop').innerHTML = html;
+
+    }
+
+    /*图片预览*/
+    function preview(){
+        var ele = window.event.target;
+        var id = ele.id;
+        while(!id){
+            ele = ele.parentNode;
+            id = ele.id;
+        }
+
+        var popup = tool_popup();
+        popup.init()
+        popup.con = '<div id="_preview"></div>';
+        popup.callback = function(){
+        }
+        popup.title = '预览'
+        popup.style_popup_con += 'max-height:560px;'
+        popup.show()
+        var url = interface.data.isresexist;
+        var datastr = "raw="+id.substr(8);
+        $.ajax({
+            url:url,
+            type:"post",
+            data:datastr,
+            dataType:'json',
+            success:function(data){
+                var ids = [];
+                if(data.error == 0){
+                    ids.push(data.res);
+                    var json = JSON.stringify(ids);
+                    var obj = {
+                        dataid:json,
+                        url:interface.data.resvision,
+                        domid:'_preview',
+                        data:[],
+                        cur:0,
+                        israw:false
+                    }
+                    genPreview(obj)
+                }else{
+                    ids.push(id.substr(8));
+                    var json = JSON.stringify(ids);
+                    var obj = {
+                        dataid:json,
+                        url:interface.data.rawvision,
+                        domid:'_preview',
+                        data:[],
+                        cur:0,
+                        israw:true
+                    }
+                    genPreview(obj)
+                }
+            },
+            error:function(){
+                hide_loading();
+                alert('接口 '+url+' 请求错误')
+            }
+        })
+    }
+</script>
+
+</html>

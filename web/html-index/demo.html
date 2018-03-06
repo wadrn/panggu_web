@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_riym2jsagrx561or.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+
+    <div class="_main_con_5" id="_data_con">
+
+        <div class="pd20">
+
+            <div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile" id="_r_title"></span>
+                    <ul class="v breadnav1" id="_r_bnav">
+                        <li><a href="#">首页</a></li>
+                        <li>demo演示</li>
+                    </ul>
+                </h4>
+            </div>
+
+            <div class="bgpd15" style="position: relative;padding-top: 10px;min-height: 768px;">
+                <div class="bgpd15" id="demo"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+    shownav({
+        oname:'首页',
+        tname:'demo演示'
+    });
+    obj ={
+        domid:'demo',
+        modellist:[
+            {
+                title:'行人检测',
+                model:'persons'
+            },
+            {
+                title:'车辆检测',
+                model:'detections'
+            },
+            {
+                title:'人脸识别',
+                model:'faces'
+            },
+            {
+                title:'车辆识别',
+                model:'vehicles'
+            }
+        ],
+        curmodel:'persons',
+    };
+    var demo = demo(obj);
+    demo.init();
+//    demo.renderbase();
+//    demo.renderleftlist();
+//    demo.rendertoplist();
+//    demo.ajaxresult();
+</script>

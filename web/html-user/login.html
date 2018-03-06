@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8">
+  	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui'/>
+  	<meta name='apple-mobile-web-app-capable' content='yes' />
+  	<meta name='format-detection' content='telephone=no'>
+    <title>登录</title>
+    <link rel="stylesheet" href="../css/login.css">
+	<link rel="stylesheet" href="../css/vhtml.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_f83ufp3l4ecanhfr.css">
+    <style>
+      body{
+        font-family: 'Source Sans Pro', sans-serif;
+        font-weight: 300;
+		font-size: 14px;
+      }
+      body ::-webkit-input-placeholder {
+        /* WebKit browsers */
+        font-family: 'Source Sans Pro', sans-serif;
+		color: #b2b2b2;
+		font-size: 12px;
+        font-weight: 300;
+      }
+      body :-moz-placeholder {
+        /* Mozilla Firefox 4 to 18 */
+        font-family: 'Source Sans Pro', sans-serif;
+		color: #b2b2b2;
+		font-size: 12px;
+        font-weight: 300;
+      }
+      body ::-moz-placeholder {
+        /* Mozilla Firefox 19+ */
+        font-family: 'Source Sans Pro', sans-serif;
+        opacity: 1;
+		color: #b2b2b2;
+		font-size: 12px;
+        font-weight: 300;
+      }
+      body :-ms-input-placeholder {
+        /* Internet Explorer 10+ */
+        font-family: 'Source Sans Pro', sans-serif;
+        color: #b2b2b2;
+		font-size: 12px;
+        font-weight: 300;
+      }
+      input{
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 6px;
+        padding: 10px 15px;
+        margin: 0 0 10px 0;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 300;
+      }
+	  .inp{
+		width: 61%;
+		position: relative;
+		left:39%;
+	  }
+	  .inp.left{
+		text-align: left;
+		color: #fff
+	  }
+	  .inp input{
+		display: inline-block;
+		width: 35%;
+	  }
+	  
+	  #_tool_p_con{
+		top: 20px !important;
+	  }
+	  
+	  .item{
+		margin-left: 50px;
+		margin-bottom: 10px;
+		position: relative;
+	  }
+	  #register_popup .item label{
+		display: inline-block;
+		min-width: 100px;
+	  }
+	  .i_input{
+		height:30px;
+		padding:4px 10px;
+		border:1px solid rgba(151,151,151,.2);
+		width: 50%;
+		margin-left: 50px;
+	  }
+	  .v.btn.blue{
+		background: #008bd5;
+	  }
+	  .disable_resend{
+		color: #b2b2b2
+	  }
+	  .disable_resend:hover{
+		color: #b2b2b2
+	  }
+	  .enable_resend{
+		color: #008CD6
+	  }
+    </style>
+  </head>
+  <body>
+
+    <div style="position:absolute; top:0px; right:0px; bottom:0px; left:0px; background-size:100% 100%;">
+      <div style="height:280px; position:relative; width: 100%;pdding-bottom: 80px;">
+        <div style="margin:0 auto; padding:20px 0; text-align:center;">
+		  <div><img src="../images/horizon-logo.png" style="width: 6%;margin-bottom: 40px;"></div>
+		  <div><img src="../images/title.png" style="width: 26.7%; margin-bottom: 40px;"></div>
+          <div style="background:#008CD6;padding: 2% 0 2% 0;" id="login_block">
+			  <div class="inp left">用户名</div>
+			  <div class="inp left"> <input type="text" name="username" tabindex="1" style="border: 1px solid #fff;"/><a href="javascript:;" id="register" style="height: 40px; padding:4px 10px; border:none; background:none; color: #fff; width: 132px; border-radius:4px;">注册新用户</a></div>
+			  <div class="inp left">密码</div>
+			  <div class="inp left"> <input type="password"  name="password" tabindex="2" style="border: 1px solid #fff;"/><a href="javascript:;" style="height: 40px; padding:4px 10px; border:none; background:none; color: #fff; width: 132px; border-radius:4px;" onclick="showForgetPW()">忘记密码</a> </div>
+			  <div style="margin-top: 30px;"> <button onclick="logininit()" tabindex="3" style="height: 40px; padding:2px 10px; border:1px solid #026aa0; background:#0070ab; color: #fff; width:8.3%; border-radius:6px; cursor: pointer;">登录</button> </div>
+			  <div class="error_tooltip" style="display: none;margin-bottom: 15px;"></div>
+		  </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../js/requirefile.js"></script>
+    <script type="text/javascript">
+		var user_info = {}
+		var resend_intval;
+		eventBindings();
+		function eventBindings(){
+			$("#register").bind("click",function(){
+				showRegister()
+			});
+			$("#login_block input").keydown(function(e){
+				var e = e || window.event;
+				var keyCode = e.keyCode || e.which;
+				switch (keyCode) {
+				  case 13:
+					  logininit();
+					  break;
+				  default:
+					  break;
+				}
+			})
+			
+		}
+		function showRegister(refill){
+			var popup = tool_popup()
+			popup.head_show = false
+			popup.foot_show = false
+			popup.style_popup_con = 'width:690px; max-height:700px; background:#fff; position:absolute; left:50%; top:60px; bottom:100px; transform: translate(-50%, 0); -webkit-transform: translate(-50%, 0);'
+			popup.con = '<div id="register_popup">'+
+							'<div style=" font-size: 18px;position:relative;text-align: center;font-weight: 500;margin-bottom: 20px;">填写注册信息</div>'+
+							'<div class="item"><label>用户名(必填):</label>'+
+								'<input onchange="isNameC()" type="text" name="name" class="i_input" placeholder="输入英文字母及数字，区分大小写"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item"><label>邮箱(必填):</label>'+
+								'<input onchange="isEmailC()" type="text" name="email" class="i_input"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item">'+
+								'<label>真实姓名:</label>'+
+								'<input onchange="" type="text" name="byname" class="i_input"/>'+
+							'</div>'+
+							'<div class="item"><label>手机号:</label>'+
+								'<input onchange="isNumberC()" type="text" name="phone" class="i_input" placeholder="输入11位手机号码"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item"><label>公司名称:</label>'+
+								'<input onblur="" type="text" name="company" class="i_input" placeholder=""/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item"><label>详细地址:</label>'+
+								'<input onblur="" type="text" name="address" class="i_input" placeholder=""/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item"><label>密码(必填):</label>'+
+								'<input onchange="isPassC()" type="password" id="register_password" class="i_input" placeholder="输入英文字母、数字或符号，区分大小写"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item"><label>确认密码(必填):</label>'+
+								'<input onchange="isSame()" type="password" name="password2" class="i_input" placeholder="请输入与之前一致的密码"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item" style="margin-bottom: 27px;"><label></label>'+
+								'<input name="issu" type="checkbox" style="margin-left: 50px;vertical-align: -2px; cursor: pointer;" onclick="isAgree()"/> 我已阅读，并同意<a href="#" style="color: #008CD6; font-weight: 500;">《用户注册协议》</a></label>'+
+							'</div>'+
+								'<div class="item"><label></label>'+
+								'<a id="register_start" href="javascript:;" class="v btn gray" onclick="" style="width: 120px; line-height: 26px; margin-right: 20px; pointer-events: none">注册</a>'+
+								'<a id="register_cancel" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-left: 78px;">取消</a>'+
+							'</div>'+
+						'</div>'
+			var html = '';
+			popup.show();
+			if(refill){
+				document.getElementsByName('name')[0].value = user_info.name
+				document.getElementsByName('email')[0].value = user_info.email
+				document.getElementsByName('byname')[0].value = user_info.byname
+				document.getElementsByName('phone')[0].value = user_info.phone
+				document.getElementsByName('company')[0].value = user_info.company
+				document.getElementsByName('address')[0].value = user_info.address
+				document.getElementsByName('issu')[0].checked = true
+				isAgree()
+			}
+			$(document).off("click","#register_start").on("click","#register_start",function(){
+				registerinit();
+			})
+			$(document).off("click","#register_cancel").on("click","#register_cancel",function(){
+				popup.hide();
+			})
+		}
+		function showMailActivePopup(email,datastr){
+			var popup = tool_popup()
+			var data_str = datastr;
+			var url = interface.user.register
+			popup.head_show = false
+			popup.foot_show = false
+			popup.style_popup_con = 'width:690px; max-height:400px; background:#fff; position:absolute; left:50%; top:60px; bottom:100px; transform: translate(-50%, 0); -webkit-transform: translate(-50%, 0);'
+			popup.con = '<div id="mai_active_popup">'+
+							'<div style=" font-size: 18px;position:relative;text-align: center;font-weight: 500;margin-bottom: 20px;margin-top: 50px;">邮箱激活</div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: left;margin: 0px 0px 20px 80px;">激活邮件已发至: '+email+', 请登录邮箱获取激活链接</div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: left;margin: 0px 0px 5px 80px;">没收到邮件？</div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: left;margin: 0px 0px 5px 80px;">1. 请检查邮箱中的垃圾邮件</div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: left;margin: 0px 0px 5px 80px;">2. 若邮箱填写错误，请<a href="javascript:;" style="color: #008CD6; font-weight: 500; text-decoration:underline;" onclick="showRegister(1)">重新填写</a></div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: left;margin: 0px 0px 5px 80px;">3. 若仍未收到激活邮件，请<a href="javascript:;" class="enable_resend" style="font-weight: 500; text-decoration:underline;" id="resend_mail">重新发送</a></div>'+
+							'<div style="text-align: center;margin-top: 50px;"><label></label>'+
+								'<a id="mail_back" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-right: 20px;">返回首页</a>'+
+							'</div>'+
+						'</div>'
+			var html = '';
+			popup.show();
+			$(document).off("click","#mail_back").on("click","#mail_back",function(){
+				popup.hide();
+			})
+			$(document).off("click","#resend_mail").on("click","#resend_mail",function(){
+				var this_jdom = $(this)
+				if(this_jdom.hasClass("disable_resend")){
+					return
+				}
+				xmlhttppost(url,data_str,function(data){
+				  if(data.error == 0){
+					alert("已重新发送");
+					this_jdom.removeClass("enable_resend").addClass("disable_resend").after("<span id='remain_sec_block'>(已重新发送激活邮件，<span id='remain_sec'>300</span>s之后才能再次发送)<span>")
+					resend_intval = setInterval(function(){
+						var number = parseInt($("#remain_sec").text())
+						if(number > 0){
+							number--
+							$("#remain_sec").text(number)
+						}
+						else{
+							clearInterval(resend_intval);
+							this_jdom.removeClass("disable_resend").addClass("enable_resend")
+							$("#remain_sec_block").remove();
+						}
+					},1000)				
+				  }else{
+					alert(data['msg'])
+				  }
+				})
+			})
+		}
+
+		function showForgetPW(){
+			var popup = tool_popup()
+			popup.head_show = false
+			popup.foot_show = false
+			popup.style_popup_con = 'width:620px; max-height:250px; background:#fff; position:absolute; left:50%; top:32%; bottom:100px; transform: translate(-50%, 0); -webkit-transform: translate(-50%, 0);'
+			popup.con = '<div id="forgetpw_popup">'+
+							'<div style=" font-size: 18px;position:relative;text-align: center;font-weight: 500;margin-bottom: 20px;">找回密码</div>'+
+							'<div class="item"><label>请输入注册时的用户名:</label>'+
+								'<input type="text" id="forget_user" class="i_input"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item" style="margin-top: 35px;"><label></label>'+
+								'<a id="forget_start" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-right: 20px; margin-left: 30px;">下一步</a>'+
+								'<a id="forget_cancel" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-left: 78px;">取消</a>'+
+							'</div>'+
+						'</div>'
+			var html = '';
+			popup.show();
+			$(document).off("click","#forget_start").on("click","#forget_start",function(){
+				var url = interface.user.findpwd
+				var user = $("#forget_user").val()
+				var datastr = 'user_name='+user+'&step=1'
+				xmlhttppost(url,datastr,function(data){
+					if(data.error == 0){
+						showForgetActive(data.data.email,user);
+					}
+					else{
+						alert(data.msg)
+					}
+				})
+			})
+			$(document).off("click","#forget_cancel").on("click","#forget_cancel",function(){
+				popup.hide();
+			})
+		}
+		
+		function showForgetActive(email,username){
+			var popup = tool_popup()
+			popup.head_show = false
+			popup.foot_show = false
+			popup.style_popup_con = 'width:620px; max-height:220px; background:#fff; position:absolute; left:50%; top:32%; bottom:100px; transform: translate(-50%, 0); -webkit-transform: translate(-50%, 0);'
+			popup.con = '<div id="forgetac_popup">'+
+							'<div style=" font-size: 18px;position:relative;text-align: center;font-weight: 500;margin-bottom: 20px;">找回密码</div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: left;margin: 0px 0px 20px 50px;">验证码已发至: '+email+', 请登录邮箱获取,请于2小时内登录邮箱获取</div>'+
+							'<div class="item" style="margin-top: 35px;"><label></label>'+
+								'<a id="forgetac_start" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-right: 20px; margin-left: 30px;">下一步</a>'+
+								'<a id="forgetac_cancel" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-left: 78px;">取消</a>'+
+							'</div>'+
+						'</div>'
+			var html = '';
+			popup.show();
+			$(document).off("click","#forgetac_start").on("click","#forgetac_start",function(){
+				showForgetReset(username);
+			})
+			$(document).off("click","#forgetac_cancel").on("click","#forgetac_cancel",function(){
+				popup.hide();
+			})
+		}
+
+		function showForgetReset(username){
+			var popup = tool_popup()
+			popup.head_show = false
+			popup.foot_show = false
+			popup.style_popup_con = 'width:620px; max-height:390px; background:#fff; position:absolute; left:50%; top:30%; bottom:100px; transform: translate(-50%, 0); -webkit-transform: translate(-50%, 0);'
+			popup.con = '<div id="forgetre_popup">'+
+							'<div style=" font-size: 18px;position:relative;text-align: center;font-weight: 500;margin-bottom: 20px;margin-top: 15px;">找回密码</div>'+
+							'<div class="item"><label>邮箱验证码:</label>'+
+								'<input onblur="isAuthCodeC()" type="text" name="authcode" class="i_input"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item"><label>输入新密码:</label>'+
+								'<input onblur="isPassC()" type="password" id="register_password" class="i_input"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item"><label>确认新密码:</label>'+
+								'<input onblur="isSame()" type="password" name="password2" class="i_input"/>'+
+								'<div class="register_error_tooltip"></div>'+
+							'</div>'+
+							'<div class="item" style="margin-top: 35px;"><label></label>'+
+								'<a id="forgetre_start" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-right: 20px; margin-left: 30px;">确定</a>'+
+								'<a id="forgetre_cancel" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-left: 78px;">取消</a>'+
+							'</div>'+
+						'</div>'
+			var html = '';
+			popup.show();
+			$(document).off("click","#forgetre_start").on("click","#forgetre_start",function(){
+				resetInit(username);
+			})
+			$(document).off("click","#forgetre_cancel").on("click","#forgetre_cancel",function(){
+				popup.hide();
+			})
+		}
+
+		function showForgetSucc(){
+			var popup = tool_popup()
+			popup.head_show = false
+			popup.foot_show = false
+			popup.style_popup_con = 'width:620px; max-height:280px; background:#fff; position:absolute; left:50%; top:30%; bottom:100px; transform: translate(-50%, 0); -webkit-transform: translate(-50%, 0);'
+			popup.con = '<div id="forgetre_popup">'+
+							'<div style=" font-size: 18px;position:relative;text-align: center;font-weight: 500;margin-bottom: 20px;margin-top: 15px;">找回密码</div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: center;margin-bottom: 20px;">密码修改成功！</div>'+
+							'<div style=" font-size: 14px;position:relative;text-align: center;margin-bottom: 20px; color: #c4c4c4;"><span id="left_sec">5</span>s 后自动跳转到登录页面</div>'+
+							'<div class="item" style="margin-top: 35px;"><label></label>'+
+								'<a id="direct_back" href="javascript:;" class="v btn blue" onclick="" style="width: 120px; line-height: 26px; margin-right: 20px; margin-left: 150px; width: 150px;">直接跳转到登录页面</a>'+
+							'</div>'+
+						'</div>'
+			var html = '';
+			popup.show();
+			var int_id = setInterval(function(){
+				var num = parseInt($("#left_sec").text());
+				$("#left_sec").text(num-1)
+				if(num-1 == 0){
+					clearInterval(int_id);
+					popup.hide();
+				}
+			},1000)
+			$(document).off("click","#direct_back").on("click","#direct_back",function(){
+				clearInterval(int_id);
+				popup.hide();
+			})
+		}
+		
+		function resetInit(username){
+			if(!isAuthCodeC()){
+				return false;
+			}else if(!isPassC()){
+				return false;
+			}else if(!isSame()){
+				return false;
+			}else{
+				var url = interface.user.findpwd
+				var user = username
+				var authcode = document.getElementsByName('authcode')[0].value
+				var password = $("#register_password").val()
+
+				var datastr = 'user_name='+user+'&step=2'+'&authcode='+authcode+'&password='+password
+				xmlhttppost(url,datastr,function(data){
+				  if(data.error == 0){
+					showForgetSucc();
+					//window.location.href = 'login.html'
+				  }else{
+					alert(data.msg)
+				  }
+				})
+			}
+		}
+		
+		function isNameC(){
+          var name = document.getElementsByName('name')[0].value;
+          if (name =='') {
+              document.getElementsByName('name')[0].style.border='red solid 1px'
+              $('input[name="name"] + .register_error_tooltip').html('用户名不能为空')
+              $('input[name="name"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else if(name.length <3){
+              document.getElementsByName('name')[0].style.border='red solid 1px'
+              $('input[name="name"] + .register_error_tooltip').html('用户名长度必须大于3个字符')
+              $('input[name="name"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else{
+              var reg= /\w{3,}/g;
+              if(!reg.test(name)){
+                  document.getElementsByName('name')[0].style.border='red solid 1px'
+                  $('input[name="name"] + .register_error_tooltip').html('用户名格式不正确')
+                  $('input[name="name"] + .register_error_tooltip').css('display','block');
+                  return false;
+              }else{
+                  document.getElementsByName('name')[0].style.border=''
+                  $('input[name="name"] + .register_error_tooltip').html();
+                  $('input[name="name"] + .register_error_tooltip').css('display','none');
+                  return true;
+              }
+          }
+      }
+	  function isAuthCodeC(){
+		var authcode = document.getElementsByName('authcode')[0].value;
+		if(authcode == ''){
+              document.getElementsByName('authcode')[0].style.border='red solid 1px'
+              $('input[name="authcode"] + .register_error_tooltip').html('邮箱验证码不能为空')
+              $('input[name="authcode"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else{
+				document.getElementsByName('authcode')[0].style.border=''
+				$('input[name="authcode"] + .register_error_tooltip').html();
+                $('input[name="authcode"] + .register_error_tooltip').css('display','none');
+			  return true;
+		  }
+	  }
+	  function isEmailC(){
+          var email =document.getElementsByName('email')[0].value;
+          if(email == ''){
+              document.getElementsByName('email')[0].style.border='red solid 1px'
+              $('input[name="email"] + .register_error_tooltip').html('邮箱不能为空')
+              $('input[name="email"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else{
+              var reg = /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/g
+              if(!reg.test(email)){
+                  document.getElementsByName('email')[0].style.border='red solid 1px'
+                  $('input[name="email"] + .register_error_tooltip').html('邮箱格式不正确')
+                  $('input[name="email"] + .register_error_tooltip').css('display','block');
+                  return false;
+              }else{
+                  document.getElementsByName('email')[0].style.border=''
+                  $('input[name="email"] + .register_error_tooltip').html('#fff solid 1px')
+                  $('input[name="email"] + .register_error_tooltip').css('display','none');
+                  return true;
+              }
+          }
+      }
+	  function isNumberC(){
+          var phone = document.getElementsByName('phone')[0].value;
+          var reg = /^1[3|4|5|8][0-9]\d{4,8}$/g
+          if(phone == ""){
+				$('input[name="phone"] + .register_error_tooltip').css('display','none');
+				document.getElementsByName('phone')[0].style.border=''
+				return true
+          }
+          if(!reg.test(phone)){
+              document.getElementsByName('phone')[0].style.border='red solid 1px'
+              $('input[name="phone"] + .register_error_tooltip').html('手机号码格式不正确')
+              $('input[name="phone"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else{
+              document.getElementsByName('phone')[0].style.border=''
+              $('input[name="phone"] + .register_error_tooltip').html('#fff solid 1px')
+              $('input[name="phone"] + .register_error_tooltip').css('display','none');
+              return true;
+          }
+      }
+	  function isPassC(){
+          var password = $("#register_password").val()
+          if($.trim(password) == ''){
+               $("#register_password").css("border", 'red solid 1px')
+              $('#register_password + .register_error_tooltip').html('密码不能为空')
+              $('#register_password + .register_error_tooltip').css('display','block');
+              return false;
+          }else if(password.length <6 || password.length >20){
+              $("#register_password").css("border", 'red solid 1px')
+              $('#register_password + .register_error_tooltip').html('密码长度为6到20位')
+              $('#register_password + .register_error_tooltip').css('display','block');
+              return false;
+          }else{
+              var reg = /\w{6,20}/g
+              if(!reg.test(password)){
+                  $("#register_password").css("border", 'red solid 1px')
+                  $('#register_password + .register_error_tooltip').html('密码格式不正确')
+                  $('#register_password + .register_error_tooltip').css('display','block');
+                  return false;
+              }else{
+                  $("#register_password").css("border", 'rgba(151,151,151,.2) solid 1px')
+                  $('#register_password + .register_error_tooltip').html('')
+                  $('#register_password + .register_error_tooltip').css('display','none');
+                  return true;
+              }
+          }
+      }
+      function isSame(){
+          var password = $("#register_password").val()
+          var password2 = document.getElementsByName('password2')[0].value;
+          if(password != password2){
+              document.getElementsByName('password2')[0].style.border='red solid 1px'
+              $('input[name="password2"] + .register_error_tooltip').html('两次输入的密码不一致')
+              $('input[name="password2"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else{
+              document.getElementsByName('password2')[0].style.border='rgba(151,151,151,.2) solid 1px'
+              $('input[name="password2"] + .register_error_tooltip').html('')
+              $('input[name="password2"] + .register_error_tooltip').css('display','none');
+              return true;
+          }
+      }
+
+      function isAgree(){
+          if(document.getElementsByName('issu')[0].checked){
+              $('#register_start').removeClass('gray').addClass('blue');
+              document.getElementById('register_start').style.pointerEvents = 'auto';
+              return true;
+          }else{
+              $('#register_start').removeClass('blue').addClass('gray');
+              document.getElementById('register_start').style.pointerEvents = 'none';
+              return false;
+          }
+      }
+
+      function registerinit(){
+          if(!isNameC()){
+              return false;
+          }else if(!isEmailC()){
+              return false;
+          }
+		  else if(!isNumberC()){
+              return false;
+          }else if(!isPassC()){
+              return false;
+          }else if(!isSame()){
+              return false;
+          }else if(!isAgree()){
+              return false;
+          }else{
+				var url = interface.user.register
+				var issu = document.getElementsByName('issu')[0].checked
+				if(!issu){
+				  alert('请先同意注册协议')
+				  return false
+				}else{
+                    var name = 'name='+ document.getElementsByName('name')[0].value
+                    var email =  '&email='+ document.getElementsByName('email')[0].value
+                    var byname = '&byname='+ document.getElementsByName('byname')[0].value
+                    var password = '&password='+ $("#register_popup #register_password").val()
+                    var phone = '&phone=' + document.getElementsByName('phone')[0].value
+                    var company = '&company=' +document.getElementsByName('company')[0].value
+                    var address = '&address=' +document.getElementsByName('address')[0].value
+                    var datastr = name + email + byname + password + phone + company + address +'&pangu=1'
+					user_info = {
+						"name" : document.getElementsByName('name')[0].value,
+						"email" : document.getElementsByName('email')[0].value,
+						"byname": document.getElementsByName('byname')[0].value,
+						//"password": $("#register_popup #register_password").val(),//出于安全考虑前端不保存密码
+						"phone": document.getElementsByName('phone')[0].value,
+						"company": document.getElementsByName('company')[0].value,
+						"address": document.getElementsByName('address')[0].value
+					}
+                    xmlhttppost(url,datastr,function(data){
+                        if(data.error == 0){
+                            /*alert('注册成功,请前往邮箱激活，即将跳转到登录界面')
+                            window.location.href='login.html'*/
+                            showMailActivePopup(document.getElementsByName('email')[0].value,datastr)
+                        }else{
+                            alert(data['msg'])
+                        }
+                    })
+                }
+
+
+			  }
+      }
+		
+      function xmlhttppost(url,data,callback){
+        var xmlhttp;
+        if (window.XMLHttpRequest){
+          xmlhttp=new XMLHttpRequest();
+        }else{// code for IE6, IE5
+          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function(){
+          if (xmlhttp.readyState==4 && xmlhttp.status==200){
+            var data = JSON.parse(xmlhttp.responseText)
+            callback(data)
+          }
+        }
+        xmlhttp.open("POST",url,false);
+        xmlhttp.setRequestHeader("content-type","application/x-www-form-urlencoded")
+        xmlhttp.send(data);
+      }
+
+      function logininit() {
+        var url = interface.user.login
+        var user = document.getElementsByName('username')[0].value
+        var pwd = document.getElementsByName('password')[0].value
+        if (user == '') {
+          document.getElementsByName('username')[0].style.border='red solid 1px'
+            $('.error_tooltip').html('用户名不能为空');
+            $('.error_tooltip').css('color','red');
+            $('.error_tooltip').css('display','block');
+        }
+        else if (pwd == '') {
+          document.getElementsByName('password')[0].style.border='red solid 1px'
+            $('.error_tooltip').html('密码不能为空');
+            $('.error_tooltip').css('color','red');
+            $('.error_tooltip').css('display','block');
+        }
+        else {
+          var datastr = 'name=' + user + '&password=' + pwd+'&remember=1'
+          xmlhttppost(url, datastr, function (data) {
+            if (data.error == 0) {
+                window.location.href = '/static/web/html-train/index.html';
+                cookie.delCookie('_user_name');
+                cookie.writeCookie(user,'_user_name');
+            } else {
+                $('.error_tooltip').html('登录失败:'+data.msg+',请重新输入');
+                $('.error_tooltip').css('color','red');
+                $('.error_tooltip').css('display','block');
+            }
+          })
+        }
+      }
+
+    </script>
+  </body>
+</html>

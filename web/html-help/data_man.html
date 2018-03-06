@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <title>【外】数据管理.md</title>
+
+    <style id="wiz_custom_css">html, body {font-size: 12pt;}body {font-family: Helvetica, 'Hiragino Sans GB', '微软雅黑', 'Microsoft YaHei UI', SimSun, SimHei, arial, sans-serif;line-height: 1.6;margin: 0 auto;padding: 20px 16px;padding: 1.25rem 1rem;}h1, h2, h3, h4, h5, h6 {margin:20px 0 10px;margin:1.25rem 0 0.625rem;padding: 0;font-weight: bold;}h1 {font-size:20pt;font-size:1.67rem;}h2 {font-size:18pt;font-size:1.5rem;}h3 {font-size:15pt;font-size:1.25rem;}h4 {font-size:14pt;font-size:1.17rem;}h5 {font-size:12pt;font-size:1rem;}h6 {font-size:12pt;font-size:1rem;color: #777777;margin: 1rem 0;}div, p, ul, ol, dl, li {margin:0;}blockquote, table, pre, code {margin:8px 0;}ul, ol {padding-left:32px;padding-left:2rem;}ol.wiz-list-level1 > li {list-style-type:decimal;}ol.wiz-list-level2 > li {list-style-type:lower-latin;}ol.wiz-list-level3 > li {list-style-type:lower-roman;}blockquote {padding:0 12px;padding:0 0.75rem;}blockquote > :first-child {margin-top:0;}blockquote > :last-child {margin-bottom:0;}img {border:0;max-width:100%;height:auto !important;margin:2px 0;}table {border-collapse:collapse;border:1px solid #bbbbbb;}td, th {padding:4px 8px;border-collapse:collapse;border:1px solid #bbbbbb;min-height:28px;word-break:break-all;box-sizing: border-box;}.wiz-hide {display:none !important;}</style><style name="wiz_tmp_editor_style">html {height:100%;} body {min-height:100%;box-sizing:border-box;word-wrap: break-word !important;}a {word-wrap: break-word;}img::selection {background-color: rgba(0, 0, 255, 0.3);}.wiz-table-container {}.wiz-table-body {position:relative;padding:10px 0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;}.wiz-table-body table {margin:0;outline:none;}td,th {outline:none;}undefinedundefined</style><link rel="stylesheet" charset="utf-8" name="wiz_tmp_editor_style" href="../css/github2.css"><link rel="stylesheet" charset="utf-8" name="wiz_tmp_editor_style" href="../css/wizToc.css"><style id="wiz_code_style">.wiz-code-container{position: relative; padding:8px 0; margin: 5px 25px 5px 5px;text-indent:0;}.CodeMirror {font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace; color: black; font-size: 10pt; font-size: 0.83rem}.CodeMirror-lines {padding: 4px 0;}.CodeMirror pre {padding: 0 4px;}.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {background-color: white;}.CodeMirror-gutters {border-right: 1px solid #ddd; background-color: #f7f7f7; white-space: nowrap;}.CodeMirror-linenumbers {}.CodeMirror-linenumber {padding: 0 3px 0 5px; min-width: 20px; text-align: right; color: #999; white-space: nowrap;}.CodeMirror-guttermarker {color: black;}.CodeMirror-guttermarker-subtle {color: #999;}.CodeMirror-cursor {border-left: 1px solid black; border-right: none; width: 0;}.CodeMirror div.CodeMirror-secondarycursor {border-left: 1px solid silver;}.cm-fat-cursor .CodeMirror-cursor {width: auto; border: 0 !important; background: #7e7;}.cm-fat-cursor div.CodeMirror-cursors {z-index: 1;}.cm-animate-fat-cursor {width: auto; border: 0; -webkit-animation: blink 1.06s steps(1) infinite; -moz-animation: blink 1.06s steps(1) infinite; animation: blink 1.06s steps(1) infinite; background-color: #7e7;}@-moz-keyframes blink {  0% {}  50% { background-color: transparent; }  100% {}}@-webkit-keyframes blink {  0% {}  50% { background-color: transparent; }  100% {}}@keyframes blink {  0% {}  50% { background-color: transparent; }  100% {}}.CodeMirror-overwrite .CodeMirror-cursor {}.cm-tab { display: inline-block; text-decoration: inherit; }.CodeMirror-rulers {position: absolute; left: 0; right: 0; top: -50px; bottom: -20px; overflow: hidden;}.CodeMirror-ruler {border-left: 1px solid #ccc; top: 0; bottom: 0; position: absolute;}.cm-s-default .cm-header {color: blue;}.cm-s-default .cm-quote {color: #090;}.cm-negative {color: #d44;}.cm-positive {color: #292;}.cm-header, .cm-strong {font-weight: bold;}.cm-em {font-style: italic;}.cm-link {text-decoration: underline;}.cm-strikethrough {text-decoration: line-through;}.cm-s-default .cm-keyword {color: #708;}.cm-s-default .cm-atom {color: #219;}.cm-s-default .cm-number {color: #164;}.cm-s-default .cm-def {color: #00f;}.cm-s-default .cm-variable,.cm-s-default .cm-punctuation,.cm-s-default .cm-property,.cm-s-default .cm-operator {}.cm-s-default .cm-variable-2 {color: #05a;}.cm-s-default .cm-variable-3 {color: #085;}.cm-s-default .cm-comment {color: #a50;}.cm-s-default .cm-string {color: #a11;}.cm-s-default .cm-string-2 {color: #f50;}.cm-s-default .cm-meta {color: #555;}.cm-s-default .cm-qualifier {color: #555;}.cm-s-default .cm-builtin {color: #30a;}.cm-s-default .cm-bracket {color: #997;}.cm-s-default .cm-tag {color: #170;}.cm-s-default .cm-attribute {color: #00c;}.cm-s-default .cm-hr {color: #999;}.cm-s-default .cm-link {color: #00c;}.cm-s-default .cm-error {color: #f00;}.cm-invalidchar {color: #f00;}.CodeMirror-composing { border-bottom: 2px solid; }div.CodeMirror span.CodeMirror-matchingbracket {color: #0f0;}div.CodeMirror span.CodeMirror-nonmatchingbracket {color: #f22;}.CodeMirror-matchingtag { background: rgba(255, 150, 0, .3); }.CodeMirror-activeline-background {background: #e8f2ff;}.CodeMirror {position: relative; background: #f5f5f5;}.CodeMirror-scroll {overflow: hidden !important; margin-bottom: 0; margin-right: 0; padding: 10px 0 16px; outline: none; position: relative;}.CodeMirror-sizer {position: relative; border-right: 30px solid transparent;}.CodeMirror-vscrollbar, .CodeMirror-hscrollbar, .CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {position: absolute; z-index: 6; display: none;}.CodeMirror-vscrollbar {right: 0; top: 0; overflow-x: hidden; overflow-y: scroll;}.CodeMirror-hscrollbar {bottom: 0; left: 0 !important; overflow-y: hidden; overflow-x: scroll;}.CodeMirror-scrollbar-filler {right: 0; bottom: 0;}.CodeMirror-gutter-filler {left: 0; bottom: 0;}.CodeMirror-gutters {position: absolute; left: 0; top: -5px; min-height: 100%; z-index: 3;}.CodeMirror-gutter {white-space: normal; height: inherit; display: inline-block; vertical-align: top; margin-bottom: -30px;}.CodeMirror-gutter-wrapper {position: absolute; z-index: 4; background: none !important; border: none !important;}.CodeMirror-gutter-background {position: absolute; top: 0; bottom: 0; z-index: 4;}.CodeMirror-gutter-elt {position: absolute; cursor: default; z-index: 4; text-align: center;}.CodeMirror-gutter-wrapper ::selection { background-color: transparent }.CodeMirror-gutter-wrapper ::-moz-selection { background-color: transparent }.CodeMirror-lines {cursor: text; min-height: 1px;}.CodeMirror pre {-moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; border-width: 0; background: transparent; font-family: inherit; font-size: inherit; margin: 0; white-space: pre; word-wrap: normal; line-height: inherit; color: inherit; z-index: 2; position: relative; overflow: visible; -webkit-tap-highlight-color: transparent; -webkit-font-variant-ligatures: contextual; font-variant-ligatures: contextual;}.CodeMirror-wrap pre {word-wrap: break-word; white-space: pre-wrap; word-break: normal;}.CodeMirror-linebackground {position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 0;}.CodeMirror-linewidget {position: relative; z-index: 2; overflow: auto;}.CodeMirror-widget {}.CodeMirror-rtl pre { direction: rtl; }.CodeMirror-code {outline: none;}.CodeMirror-scroll,.CodeMirror-sizer,.CodeMirror-gutter,.CodeMirror-gutters,.CodeMirror-linenumber {-moz-box-sizing: content-box; box-sizing: content-box;}.CodeMirror-measure {position: absolute; width: 100%; height: 0; overflow: hidden; visibility: hidden;}.CodeMirror-cursor {position: absolute; pointer-events: none;}.CodeMirror-measure pre { position: static; }div.CodeMirror-cursors {visibility: hidden; position: relative; z-index: 3;}div.CodeMirror-dragcursors {visibility: visible;}.CodeMirror-focused div.CodeMirror-cursors {visibility: visible;}.CodeMirror-selected { background: #d9d9d9; }.CodeMirror-focused .CodeMirror-selected { background: #d7d4f0; }.CodeMirror-crosshair { cursor: crosshair; }.CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection { background: #d7d4f0; }.CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection { background: #d7d4f0; }.cm-searching {background: #ffa; background: rgba(255, 255, 0, .4);}.cm-force-border { padding-right: .1px; }@media print {  .CodeMirror div.CodeMirror-cursors {visibility: hidden;}}.cm-tab-wrap-hack:after { content: ""; }span.CodeMirror-selectedtext { background: none; }.CodeMirror-activeline-background, .CodeMirror-selected {transition: visibility 0ms 100ms;}.CodeMirror-blur .CodeMirror-activeline-background, .CodeMirror-blur .CodeMirror-selected {visibility:hidden;}.CodeMirror-blur .CodeMirror-matchingbracket {color:inherit !important;outline:none !important;text-decoration:none !important;}</style><style name="wiz_tmp_editor_style">.wiz-code-tools {display:none;position: absolute; top: -32px; right: 0; opacity: .95; z-index: 10;}.CodeMirror-focused .wiz-code-tools {display:block;}.CodeMirror-sizer {border-right: 0 !important;}body pre.prettyprint {padding:0;}body pre.prettyprint code {white-space: pre;}body pre.prettyprint.linenums {box-shadow:none; overflow: auto;-webkit-overflow-scrolling: touch;}body pre.prettyprint.linenums ol.linenums {box-shadow: 40px 0 0 #FBFBFC inset, 41px 0 0 #ECECF0 inset; padding: 10px 10px 10px 40px !important;}</style><style name="wiz_tmp_editor_style">.CodeMirror-cursors {visibility: hidden !important;}</style></head>
+
+<body spellcheck="false" class="markdown-body" contenteditable="false"><p>一级导航“数据”下有两个二级导航：“地平线开放数据”和“用户上传数据”。</p>
+
+<h3 id="地平线开放数据">地平线开放数据</h3>
+
+<p>盘古训练平台中，地平线公司开放了大量标注数据，覆盖多种场景，包含几十万张图片、XX个标注框/属性，有助于用户快速开展不同场景下检测或分类模型的训练。</p>
+
+<p>数据列表包含数据描述、图片/框数、数据属性、数据场景和数据小图等信息，还包含查看属性分布详情和预览数据大图的操作。可通过分页跳转的方式浏览数据，还可通过数据描述关键词或数据场景标签进行模糊搜索并查看搜索结果。</p>
+
+<p>点击“详情”操作或数据属性一列中的属性文字可查看对应数据的属性分布详情。</p>
+
+<p>点击“预览”操作或小图即可查看对应数据大图预览。由于版权限制，每条数据仅开放100张预览图片。</p>
+
+<h3 id="用户上传数据">用户上传数据</h3>
+
+<p>需要先将训练数据上传至平台，才能在训练过程中选择并使用用户上传数据。</p>
+
+<p>上传数据分为两步：上传原始数据、上传标注结果。</p>
+
+<h4 id="第一步：上传原始数据">第一步：上传原始数据</h4>
+
+<p>首先上传的是原始图片数据。点击“上传原始数据”按钮，在弹出的对话框中填写原始图片数据的ftp存放地址和数据描述，两项均为必填项，填完点击“上传”按钮开始上传，点击“取消”按钮放弃上传。</p>
+
+<p>成功开始上传后，用户上传数据列表的最上方将添加一条新的数据信息，包括原始数据的创建时间、用户填写的数据描述、上传的图片数和文件大小、数据上传状态和进度等信息。其中，上传的图片数和文件大小、数据上传状态和进度5s刷新一次，直至“状态”显示为“原始数据上传成功”，“进度”显示为“100%”，表示原始数据上传成功，此时图片数和文件大小显示为最终值。</p>
+
+<p>原始图片数据上传成功后，“上传操作”一列下对应出现“上传标注结果”链接，表示可开始上传标注结果。</p>
+
+<h4 id="第二步：上传标注结果">第二步：上传标注结果</h4>
+
+<p>点击“上传标注结果”链接，在弹出的对话框中填写与原始图片数据对应的标注结果数据的ftp存放地址，填完点击“上传”按钮开始上传，点击“取消”按钮放弃上传。</p>
+
+<p>成功开始上传后，对应数据的“状态”显示为“标注数据上传中”，同时数据上传状态和进度5s刷新一次，直至“状态”显示为“标注数据上传成功”，“进度”显示为“100%”，表示标注结果数据上传成功。</p>
+
+<p><strong>注意</strong>：对于同一条原始数据，可多次上传标注结果数据，但平台只保存最新一次的上传结果。</p>
+
+<p>用户上传数据列表中的“状态”一列中出现的状态说明如下表。</p>
+
+<div class="wiz-table-container" style="position: relative; padding: 0px;"><div class="wiz-table-body"><table>
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>用户上传数据列表中的“状态”</th>
+        <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+        <td>1</td>
+        <td>上传准备中</td>
+        <td>平台对ftp地址中数据进行解析的状态</td>
+    </tr>
+    <tr>
+        <td>2</td>
+        <td>原始数据上传中</td>
+        <td>原始数据正常上传中的状态，“进度”为原始数据上传的进度</td>
+    </tr>
+    <tr>
+        <td>3</td>
+        <td>原始数据上传成功</td>
+        <td>原始数据上传完成，“进度”为“100%”</td>
+    </tr>
+    <tr>
+        <td>4</td>
+        <td>标注数据上传中</td>
+        <td>标注结果数据正常上传中的状态，“进度”为标注结果上传的进度</td>
+    </tr>
+    <tr>
+        <td>5</td>
+        <td>标注数据上传成功</td>
+        <td>标注结果上传完成，“进度”为“100%”</td>
+    </tr>
+    <tr>
+        <td>6</td>
+        <td>找不到该路径，请提供正确的路径！</td>
+        <td>平台解析ftp地址失败，填写的ftp地址不正确</td>
+    </tr>
+    <tr>
+        <td>7</td>
+        <td>找不到xx格式文件，请确保该路径下有此格式文件！</td>
+        <td>平台解析ftp地址下的文件不符合上传数据格式要求</td>
+    </tr>
+    <tr>
+        <td>8</td>
+        <td>该数据无法识别，请检查数据是否损坏！</td>
+        <td>原始数据图片文件内容损坏或异常，平台无法解析</td>
+    </tr>
+    <tr>
+        <td>9</td>
+        <td>该数据无法导入，请检查数据格式是否正确！</td>
+        <td>标注结果文件格式不符合平台规则，平台解析入库异常</td>
+    </tr>
+    <tr>
+        <td>10</td>
+        <td>上传失败，历史失败日志已被清除，请尝试重新上传</td>
+        <td>存在未知错误，且日志过期删除，平台无法获取异常原因</td>
+    </tr>
+    <tr>
+        <td>11</td>
+        <td>上传标注数据量为0请检查</td>
+        <td>标注结果文件和原始数据不对应，平台无法解析入库</td>
+    </tr>
+    </tbody></table></div></div>
+
+
+<p>“管理”一列下的操作说明如下表。</p>
+
+<div class="wiz-table-container" style="position: relative; padding: 0px;"><div class="wiz-table-body"><table>
+    <thead>
+    <tr>
+        <th>用户上传数据列表中的“管理”操作</th>
+        <th>说明</th>
+    </tr>
+    </thead>
+    <tbody><tr>
+        <td>预览</td>
+        <td>原始数据和标注结果上传成功后可点击，分别可查看已上传的原始图片和标注结果</td>
+    </tr>
+    <tr>
+        <td>详情</td>
+        <td>标注结果上传成功后可点击，用于查看已上传标注结果的属性分布详情</td>
+    </tr>
+    <tr>
+        <td>编辑</td>
+        <td>用于修改数据描述</td>
+    </tr>
+    <tr>
+        <td>删除</td>
+        <td>用于删除单条数据信息，<strong>注意</strong>：删除的数据无法恢复，删除时需确认</td>
+    </tr>
+    </tbody></table></div></div>
+
+
+<p>点击单条数据最左端的勾选框，出现选中样式时，表示选择成功，再次点击勾选框，选中样式消失，表示取消选择。点击用户上传数据列表表头最左端的“全选”勾选框，出现选中样式时，表示全选成功，再次点击勾选框，选中样式消失，表示取消全选。对于选中的数据，点击“批量删除”按钮可批量删除多条数据。</p>
+
+<p>原始数据和标注结果的数据格式要求可查看链接。（用户上传数据格式说明）</p><wiz_tmp_tag id="wiz-table-range-border" contenteditable="false" style="display: none;"><div id="wiz-table-col-line" style="display: none;"></div><div id="wiz-table-row-line" style="display: none;"></div><div id="wiz-table-range-border_start" style="display: none;"><div id="wiz-table-range-border_start_top"></div><div id="wiz-table-range-border_start_right"></div><div id="wiz-table-range-border_start_bottom"></div><div id="wiz-table-range-border_start_left"></div><div id="wiz-table-range-border_start_dot"></div></div><div id="wiz-table-range-border_range" style="display: none;"><div id="wiz-table-range-border_range_top"></div><div id="wiz-table-range-border_range_right"></div><div id="wiz-table-range-border_range_bottom"></div><div id="wiz-table-range-border_range_left"></div><div id="wiz-table-range-border_range_dot"></div></div></wiz_tmp_tag></body></html>

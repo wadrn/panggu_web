@@ -1,0 +1,25 @@
+expend:[
+    {
+        name：'srx-test-...',
+        detail:[
+            {
+                id:10,
+                step:'RPN',
+                fps:666,
+                bandwidth:233
+            },
+            {
+                id:10,
+                step:'CNN',
+                fps:666,
+                bandwidth:233
+            }
+        ]
+    },
+    {
+        name:'task_test_1',
+        detail:[
+            ...
+        ]
+    }
+]

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+
+  </head>
+  <body>
+      <div class="_main">
+          <div id="_nav"></div>
+          <div class="search_div" id="_searchdata" style="position: absolute; top: 0px;left:130px;"></div>
+          <div class="_main_con_5" id="_data_con">
+
+            <div class="pd20">
+
+                <div class="mb20">
+                    <h4 class="v h bbottom">
+                        <span class="titile" id="_r_title"></span>
+                        <ul class="v breadnav1" id="_r_bnav">
+                            <li><a href="#">首页</a></li>
+                            <li>数据管理</li>
+                        </ul>
+                    </h4>
+                </div>
+
+                <div class="bgpd15" id="_data_list"></div>
+
+            </div>
+          </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="../js/requirefile.js"></script>
+  <script type="text/javascript">
+      shownav({
+          oname:'数据',
+          tname:'地平线开放数据'
+      });
+
+      var d_form = data_form();
+      d_form.data=[
+         {
+             desc:'数据描述',
+             type:"text",
+             name:"desc",
+         },
+          {
+            desc:'数据Id|版本',
+            type:'text',
+            name:'raw'
+          },
+          {
+              desc:'业务项目组',
+              type:"select",
+              name:"firm",
+              data:[]
+          },
+         {
+             desc:'数据场景',
+             type:'btn',
+             id:'show_tag',
+             click:'show_tags()'
+         },
+          {
+             type:'div',
+             id:'_data_label',
+              style:'display:none'
+          },
+         {
+             desc:'数据属性',
+             type:'btn',
+             id:'show_attr',
+             click:'show_attrs(this)'
+         },
+          {
+              type:'textarea',
+              name:'attr',
+              value:'',
+              style:'display:none'
+          },
+         {
+             desc:'search',
+             type:"sbtn",
+             text:'搜索',
+             fun:'searchdata()',
+             name:"username",
+             value:'',
+         }
+     ];
+
+
+     ajaxget(interface.data.firm_view+'limit=0',function(data){
+        var seldata = [{
+            key:'0',
+            text:'全部'
+        }]
+         if(data.error == 0){
+             for(var i in data.data.detail){
+                 seldata.push(
+                     {
+                         key:data.data.detail[i].id,
+                         text:data.data.detail[i].name
+                     }
+                 )
+             }
+         }
+         d_form.data[2].data = seldata
+         d_form.datahtml('_searchdata');
+     })
+
+      var obj = {
+          module:'robotdata',
+          rendcall:function(list){
+              if(!list.data.length){
+                  if(document.getElementById('default_show')){
+                      document.getElementById('default_show').innerHTML = '没有找到相关内容，换个搜索条件试试？';
+                  }
+              }
+          },
+          url:interface.data.reslist,
+          domid:'_data_list',
+          data:{list:0,status:2},
+          ispage:true,
+          isrobotdata:true,
+          curid:5,
+          title:[
+              {
+                title:'ID#版本号',
+                  style:'width:60px',
+                callback:function(data){
+                    var raw = data[0];
+                    var version = data[1];
+                    return '<span>'+raw+'#'+version+'</span>'
+                }
+              },
+              {
+                  title:"数据描述",
+                  style:'width:220px',
+                  callback:function(data){
+                      if(data){
+                          return '<span title="'+data+'" style="display: inline-block; width:100%;overflow: hidden; text-overflow: ellipsis;white-space: nowrap;">'+data+'</span>'
+                      }else{
+                          return '<span>'+'</span>'
+                      }
+                  },
+
+              },
+              {
+                  title:"图片/框数",
+                  callback:function(data){
+                      var pic_num = data[0];
+                      var boxes = data[1];
+                      return '<span>'+pic_num+'/'+boxes+'</span>'
+                  }
+              },
+
+              {
+                  title:'数据属性',
+                  callback:function(data){
+                      return '<a href="javascript:;" style="display: inline-block; width: 80%; height: 20px; text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title='+__trim(JSON.stringify(data[1]))+' onclick="show_attrs_checked()">'+data[0]+'</a>'+
+                          '<a href="javascript:;" style="display: inline-block; width: 20%; height: 20px; text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title='+__trim(JSON.stringify(data[1]))+' onclick="showGraph('+data[2]+')">分布</a>'
+                  }
+              },
+              {
+                  title:'数据场景',
+                  callback:function(data){
+                      if(data){
+                          var tags = '';
+                          for(var i=0;i<data.length;i++){
+                              var tmp = data[i].detail +';';
+                              tags += tmp;
+                          }
+                          tags = tags.substring(0,tags.length-1);
+                          return '<span>'+tags+'</span>'
+                      }else{
+                          return '<span>'+'</span>'
+                      }
+                  }
+              },
+              {
+                  title:'操作',
+                  callback:function(data){
+                      return '<a href="javascript:;" onclick="toggle_preview(this)" did="'+data+'">收起预览</a>'
+                  }
+              }
+          ],
+          datakey:[
+              ['raw','version'],
+              'comment',
+              ["pic_num",'boxes'],
+              ["attrParsed",'attr','id'],
+              "tags",
+              "id"
+          ]
+      }
+      var _list = datalist(obj)
+      function searchdata(){
+          _list.data.desc = document.getElementsByName('desc')[0].value
+          _list.data.firm = $('[name="firm"]').val()
+
+          _list.data.raw = document.getElementsByName('raw')[0].value.replace(/#/g,'|')
+
+          var attr =document.getElementById('show_attr').innerHTML;
+          if(attr =='点击添加'){
+              delete _list.data.attr;
+          }else{
+              _list.data.attr =attr;
+          }
+          var bid = document.getElementById('_data_label').getAttribute('bid')
+          if(bid && bid!='[]'){
+              _list.data.tags = bid;
+          }else{
+              delete _list.data.tags;
+          }
+          _list.page = 1
+          _list.ajaxpagedata()
+      }
+
+      var seldata=null;
+//      /*展示属性*/
+//      function show_attrs(e){
+//          var attrtree;
+//
+//          var url = interface.data.attrs;
+//          datastr = 'type=4';
+//          ajaxpost(url,datastr,function(data){
+//
+//              if(!seldata){
+//                  attrtree = attr_tree();
+//              }else{
+//                  attrtree = attr_tree();
+//                  attrtree.subobj = seldata;
+//              }
+//              attrtree.data=data.data[4];
+//
+//              var g_popup = tool_popup();
+//              g_popup.callback = function(){
+//                  seldata = attrtree.seldata();
+//                  Class.removeClass(document.getElementById('show_attr'),'show_tag');
+//                  Class.addClass(document.getElementById('show_attr'),'tags');
+//                  document.getElementById('show_attr').innerHTML = JSON.stringify(attrtree.seldata())
+//              }
+//              g_popup.titile = '选择属性'
+//              g_popup.style_popup_con += 'height:inherit; max-height: none;'
+//              g_popup.con = attrtree.html('_tool_p_con')
+//              g_popup.show()
+//              $('#_tool_p_con').find('input[type="radio"]').hide();
+//
+//              attrtree.eventinit()
+//          });
+//      }
+
+      /*展示标签*/
+//      function show_tags(){
+//          var data = data || 'firm='+$('[name="firm"]').val();
+//          var url = interface.data.tags;
+//          ajaxpost(url,data,function(data){
+//              if (data.data == undefined) {
+//                  alert("当前业务项目组没有数据标签")
+//              }
+//              else{
+//                  var dom = document.getElementById('_data_label')
+//                  var data = data.data
+//                  var cur = dom.getAttribute('bid') && JSON.parse(dom.getAttribute('bid'))
+//                  var arr = []
+//                  for(var i in data){
+//                      var obj = {
+//                          title:data[i].category,
+//                          type:'checkbox',
+//                          data:data[i].summary,
+//                          curdata:setdata(data[i].summary,cur),
+//                          isSelect:false
+//                      }
+//                      arr.push(obj)
+//                  }
+//                  var labedata = labe_data(arr)
+//                  var g_popup = tool_popup()
+//                  g_popup.callback = function(){
+//                      var data = labedata.showdata()
+//
+//                      var jdata = JSON.stringify(data)
+//                      if(data.length){
+//                          dom.setAttribute('bid',jdata)
+//                          Class.removeClass(document.getElementById('show_tag'),'show_tag');
+//                          Class.addClass(document.getElementById('show_tag'),'tags');
+//                          document.getElementById('show_tag').innerHTML = _labedata(labedata.idcnarr())
+//                      }else{
+//                          dom.setAttribute('bid',jdata)
+//                          Class.removeClass(document.getElementById('show_tag'),'show_tag');
+//                          Class.addClass(document.getElementById('show_tag'),'tags');
+//                          document.getElementById('show_tag').innerHTML = "点击添加";
+//                      }
+//                  }
+//                  g_popup.title = '选择数据场景'
+//                  g_popup.con = labedata.inithtml()
+//                  g_popup.style_popup_con +='max-height:500px'
+//                  g_popup.show()
+//
+//                  labedata.initevent()
+//              }
+//          })
+//      }
+
+
+      function setdata(data,cur){
+          if(!data || !cur) return []
+          var arr = []
+          for(var i in data){
+              for(var j in cur){
+                  if(data[i].id == cur[j]){
+                      arr.push(cur[j])
+                  }
+              }
+          }
+          return arr
+      }
+      function _labedata(data){
+          var html = ''
+          for(var i in data){
+              html += data[i]+','
+          }
+          return html
+      }
+
+
+  </script>
+
+</html>

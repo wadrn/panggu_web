@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+  </head>
+  <body>
+      <div class="_main">
+          <div id="_nav"></div>
+		  <div class="search_div" id="_searchdata" style="position: absolute; top: 0px;left:130px;"></div>
+          <div class="_main_con_5" id="_data_con">
+
+            <div class="pd20">
+
+                <!--<div class="mb20">
+                    <h4 class="v h bbottom">
+                        <span class="titile" id="_r_title"></span>
+                        <ul class="v breadnav1" id="_r_bnav">
+                            <li><a href="#">首页</a></li>
+                            <li>训练管理</li>
+                        </ul>
+                    </h4>
+                </div>-->
+				
+				<div style="margin-bottom: 15px;">
+					<span>
+						<a href="javascript:;" onclick="g_add_task()"  class="v btn blue" style="border-radius: 5px;padding: 10px;">新建训练任务</a>
+					</span>
+				</div>
+
+                <div class="oz" style="background: #fff; border: 1px solid #e2e2e2; border-bottom-width: 0px;">
+                    <span>
+                        <a href="javascript:;" style="margin: 0 1px;" sdata=""   class="tab selected _task_btn">训练中任务</a>
+                        <a href="javascript:;" style="margin: 0 1px;" sdata="is_del"   class="tab _task_btn">已删除任务</a>
+                        <a href="javascript:;" style="margin: 0 1px;" sdata="enshrine" class="tab _task_btn">已收藏任务</a>
+                    </span>
+                </div>
+                <div class="" id="_data_list"></div>
+
+            </div>
+          </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="../js/requirefile.js"></script>
+  <script type="text/javascript">
+
+      shownav({
+          oname:'训练',
+          tname:'训练管理'
+      })
+
+      var d_form = data_form()
+      d_form.data = [
+          {
+              desc:'训练名称',
+              type:"text",
+              name:"task_name",
+              value:'',
+              ph:'',
+          },
+          {
+              desc:'训练数据',
+              type:"text",
+              name:"task_data",
+              value:'',
+              ph:'',
+          },
+          {
+              desc:'search',
+              type:"sbtn",
+              text:'搜索',
+              fun:'searchdata()',
+              name:"task_data",
+              value:'',
+              ph:'',
+          }
+      ]
+      d_form.datahtml('_searchdata')
+
+
+      var obj = {
+          module:'train',
+          rendcall:function(list){
+              if(!list.data.length){
+                  if(document.getElementsByName('task_name')[0].value =='' && document.getElementsByName('task_data')[0].value==''){
+                      if(document.getElementById('default_show')){
+                          document.getElementById('default_show').innerHTML = '您还未创建任何训练任务，点击“新建训练任务”按钮创建一个吧~';
+                          list.ispage = false;
+                      }
+                  }else{
+                      if(document.getElementById('default_show')){
+                          document.getElementById('default_show').innerHTML = '没有找到相关内容，换个搜索条件试试？';
+                          list.ispage = false;
+                      }
+                  }
+
+              }
+          },
+          url:interface.train.search,
+          domid:'_data_list',
+//          data:{list:0},
+          title:[
+              {
+                title:'收藏',
+                title_callback:function(){
+                  return '收藏';
+                },
+                callback:function(data){
+                    if(data[1]){
+                        return '<a href="javascript:;"><i class="iconfont icon-shoucang" did="'+data[0]+'" onclick="toggle_collect(this)" style="color: #FFD600;"></i></a>'
+                    }else{
+                        return '<a href="javascript:;"><i class="iconfont icon-shoucang1" did="'+data[0]+'" onclick="toggle_collect(this)" style="color: #b2b2b2;"></i></a>'
+                    }
+                },
+                style:'width:50px;text-align: center;'
+              },
+              {
+                  title:'训练名称',
+                  callback:function(data){
+                      return '<span class="hidetext"><a href="add_train.html?id='+data[1]+'">'+data[0]+'</a></span>'
+                  }
+              },
+              {
+                  title:'模型名称',
+                  callback:function(data){
+                      return '<span>'+data+'</span>'
+                  }
+              },
+              {
+                  title:'运行状态',
+                  callback:function(data){
+                      return g_status_monitor[data]
+                  }
+              },
+              {
+                  title:'训练时间/h',
+                  callback:function(data){
+                      return data.cost
+                  }
+              },
+              {
+                  title:'训练数据',
+                  callback:function(data){
+                      return data
+                  }
+              },
+              {
+                  title:'训练配置',
+                  callback:function(data){
+                      return '<a href="javascript:;" d-id="'+data+'" onclick="train_config(this)">查看</a>'
+                  }
+              },
+              {
+                  title:'操作',
+                  callback:function(data){
+                      var html =
+                          '<a href="javascript:;" d-id="'+data[0]+'" text='+data[2]+' onclick="copy_task(this)">复制</a>／'+
+                          '<a href="javascript:;" d-id="'+data[0]+'" onclick="del_task(this)">删除</a>'
+                      if(data[1] == 0){
+                          html += '／'
+                          html += '<a href="javascript:;" d-id="'+data[0]+'" text='+data[2]+' onclick="edit_task(this)">编辑</a>／'
+                          html += '<a href="javascript:;" d-id="'+data[0]+'" onclick="start_task(this)">开始</a>'
+                      }
+                      if(data[1] == 3){
+                          html += '／'
+                          html += '<a href="contrast.html?id='+data[0]+'" d-id="'+data[0]+'">对比</a>／'+
+                              '<a href="javascript:;" d-id="'+data[0]+'" text='+data[2]+' onclick="copy_task(this)">fine-tune</a>／'+
+                              '<a href="javascript:;" d-id="'+data[0]+'" onclick="demo(this)">demo</a>／'+
+                              '<a href="javascript:;" d-id="'+data[0]+'" onclick="saveModel(this)">保存模型</a>／'+
+                              '<a href="evaluate_detail.html?id='+data[0]+'" d-id="'+data[0]+'" >评测</a>'
+                      }
+                      return html
+                  },
+                  style:"width:260px;"
+              }
+          ],
+          datakey:[
+              ['id','enshrine'],
+              ["task_name","id"],
+              "task_name",
+              "task_status",
+              "run_mile",
+              "task_name",
+              "id",
+              ["id","task_status","task_name"]
+          ],
+          isstatus:false
+      }
+      var _list = datalist(obj)
+
+      function toggle_collect(node){
+          if(Class.hasClass(node,'icon-shoucang1')){
+              Class.removeClass(node,'icon-shoucang1')
+              Class.addClass(node,'icon-shoucang')
+			  $(node).css("color","#FFD600")
+              var type = 1
+          }else{
+              Class.removeClass(node,'icon-shoucang')
+              Class.addClass(node,'icon-shoucang1')
+			  $(node).css("color","#b2b2b2")
+              var type = 0
+          }
+          var data = 'id='+node.getAttribute('did')+'&enshrine='+type
+          ajaxpost(interface.train.update,data,function(data){
+              if(data.error ==0){
+                  _list.ajaxpagedata()
+              }else{
+                  errorPrompt(data.msg)
+              }
+          })
+      }
+
+      function searchdata(){
+          var task_name = document.getElementsByName('task_name')[0].value
+          if(task_name){
+              _list.data.task_name = task_name
+          }else{
+              if(_list.data.task_name) delete _list.data.task_name
+          }
+
+          var task_data = document.getElementsByName('task_data')[0].value
+          if(task_data){
+              _list.data.data = task_data
+          }else{
+              if(_list.data.data){
+                 delete _list.data.data
+              }
+          }
+
+          _list.page = 1
+          _list.ajaxpagedata()
+      }
+
+
+      $('body').on('click','._task_btn',function(){
+          $(this).addClass('selected').siblings().removeClass('selected')
+          if(_list.data.is_del){
+            delete _list.data.is_del
+          }
+          if(_list.data.enshrine){
+              delete _list.data.enshrine;
+              _list.rendcall = function(list){
+                  if(!list.data.length){
+                      if(document.getElementsByName('task_name')[0].value =='' && document.getElementsByName('task_data')[0].value==''){
+                          document.getElementById('default_show').innerHTML = '您还未创建任何训练任务，点击“新建训练任务”按钮创建一个吧~';
+                          list.ispage = false;
+                      }else{
+                          document.getElementById('default_show').innerHTML = '没有找到相关内容，换个搜索条件试试？';
+                          list.ispage = false;
+                      }
+                  }
+              }
+          }else{
+              _list.rendcall = function(){
+                  document.getElementById('default_show').innerHTML = '<div style="text-align: center;">' +
+                      '<div style="text-align: center;color: #999; width: 100%;margin-bottom: 20px;">您还未收藏任何内容，在“训练任务”中收藏的内容会出现在这里~</div>' +
+                      '<a href="javascript:;" class="v btn blue" style="margin-bottom: 10px; border-radius:3px;" onclick="goCollect()">去收藏</a>' +
+                      '</div>'
+              }
+          }
+          if($(this).attr('sdata') != ''){
+              _list.data[$(this).attr('sdata')] = 1
+          }
+          _list.page = 1
+          _list.ajaxpagedata()
+      })
+
+      function goCollect(){
+          var task_btn = document.getElementsByClassName('_task_btn');
+          for(var i=0;i<task_btn.length;i++){
+              Class.removeClass(task_btn[i],'selected');
+          }
+          Class.addClass(task_btn[0],'selected');
+          if(_list.data.enshrine){
+              delete _list.data.enshrine;
+              _list.rendcall = function(list){
+                  if(!list.data.length){
+                      if(document.getElementsByName('task_name')[0].value =='' && document.getElementsByName('task_data')[0].value==''){
+                          document.getElementById('default_show').innerHTML = '您还未创建任何训练任务，点击“新建训练任务”按钮创建一个吧~';
+                          list.ispage = false;
+                      }else{
+                          document.getElementById('default_show').innerHTML = '没有找到相关内容，换个搜索条件试试？';
+                          list.ispage = false;
+                      }
+                  }
+              }
+          }
+          if($(this).attr('sdata') != ''){
+              _list.data[$(this).attr('sdata')] = 1
+          }
+          _list.page = 1
+          _list.ajaxpagedata();
+      }
+
+      function show_train_time(){
+          var popup = tool_popup()
+          popup.title = '训练时间'
+          popup.con = '<div id="train_time">'+'</div>'
+          var html = '';
+          popup.show();
+      }
+      function show_train_data(){
+          var popup = tool_popup()
+          popup.title = '数据'
+          popup.con = '<div id="train_data">'+'</div>'
+          var html = '';
+          popup.show();
+      }
+      // 配置
+      function train_config(dom){
+          var id = dom.getAttribute('d-id')
+          getiddata(id,function(data){
+              console.log(data.data)
+              var popup = tool_popup()
+              popup.title = '训练配置'
+              popup.con = '<div id="train_data">'+g_task_config_html('数据配置',data.data.data_config)+g_task_config_html('模型配置',data.data.model_config)+'</div>'
+              popup.show();
+          })
+      }
+      function old_model(){
+
+      }
+      function compare(){
+      }
+      function finetune(){
+
+      }
+      function demo(){
+
+      }
+
+      function copy_task(dom){
+          var id = dom.getAttribute('d-id')
+          var text = dom.getAttribute('text')
+          g_add_task(text+'-复制-'+g_time())
+      }
+
+      function del_task(dom){
+        var id = dom.getAttribute('d-id')
+        var data = 'id='+id
+        walert('确定删除',function(){
+            ajaxpost(interface.train.del,data,function(data){
+                _list.ajaxpagedata()
+            })
+        })
+      }
+
+
+      /*编辑任务名*/
+      function edit_task(dom){
+          var id = dom.getAttribute('d-id')
+          var text = dom.getAttribute('text')
+
+          var popup = tool_popup()
+          popup.title = '编辑任务'
+          popup.con = '<div id="pop_data_edit">'+'</div>'
+          var html = '';
+          popup.style_popup_con += 'min-height:310px;height:310px;'
+          popup.show();
+          html += '<div class="v input_2 mb10" style="margin-top: 50px;padding-right: 50px;">'
+          html += '<label class="w30">任务名称<span style="color:#f00"> *</span> </label>'
+          html += '<input name="" class="text w70" cols="30" rows="6" style="border: 1px solid #ccc;" id="new_tash_name" value="'+text+'"/>'
+          html += ' <p class="info pdw30"></p>'
+          html += '</div>'
+          document.getElementById('pop_data_edit').innerHTML = html
+          popup.callback = function(){
+              var task_name = document.getElementById('new_tash_name').value;
+              var datastr = "id="+id+"&task_name="+task_name
+              var url = interface.train.update
+              ajaxpost(url,datastr,function(data){
+                  if(data.error ==0){
+                      alert('修改成功')
+                      _list.ajaxpagedata()
+                  }else{
+                      alert(data['message'])
+                  }
+              })
+          }
+      }
+
+      function getiddata(id,callback){
+          var data = 'id='+id+'&offset=0'
+          ajaxpost(interface.train.detail,data,function(data){
+              if(data.error ==0){
+                  callback(data)
+              }else{
+                  alert(data.msg)
+              }
+          })
+      }
+
+      function saveModel(dom){
+          var id = dom.getAttribute('d-id')
+          var data = 'task_id='+id
+          alert('保存模型'+data)
+//          ajaxpost(interface.train.search,data,function(data){
+//              if(data.error ==0){
+//                  callback(data)
+//              }else{
+//                  alert(data.msg)
+//              }
+//          })
+      }
+
+      function start_task(dom){
+          var id = dom.getAttribute('d-id')
+          g_start_task(id,function(){
+              _list.ajaxpagedata()
+          })
+      }
+
+  </script>
+
+</html>

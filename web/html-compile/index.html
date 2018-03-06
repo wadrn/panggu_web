@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+  </head>
+  <body>
+      <div class="_main">
+          <div id="_nav"></div>
+          <div class="search_div" id="_searchdata" style="position: absolute; top: 0px;left:140px;"></div>
+          <div class="_main_con_5" id="_data_con">
+
+            <div class="pd20">
+
+                <div class="mb20">
+                    <h4 class="v h bbottom">
+                        <span class="titile" id="_r_title"></span>
+                        <ul class="v breadnav1" id="_r_bnav">
+                            <li><a href="#">首页</a></li>
+                            <li>编译管理</li>
+                        </ul>
+                    </h4>
+                </div>
+
+
+                <div class="oz bgpd15" style="margin-bottom: 1px;">
+                    <span id="status_id"></span>
+                    <span style="float: right">
+                        <a href="add_compile.html"  class="v btn green">新建编译任务</a>
+                    </span>
+                </div>
+                <div class="bgpd15" id="_data_list"></div>
+
+            </div>
+          </div>
+      </div>
+  </body>
+  <script type="text/javascript" src="../js/requirefile.js"></script>
+  <script type="text/javascript">
+
+      shownav({
+          oname:'编译',
+          tname:'编译管理'
+      })
+
+      var d_form = data_form()
+      d_form.data = [
+          {
+              desc:'编译名称',
+              type:"text",
+              name:"task_name",
+              value:'',
+              ph:'',
+          },
+          {
+              desc:'search',
+              type:"sbtn",
+              text:'搜索',
+              fun:'searchdata()',
+              name:"task_data",
+              value:'',
+              ph:'',
+          }
+      ]
+      d_form.datahtml('_searchdata')
+
+
+      var obj = {
+          module:'compile',
+          rendcall:function(list){
+              if(!list.data.length){
+                  if(document.getElementById('default_show')){
+                      document.getElementById('default_show').innerHTML = '您还未创建任何编译任务，点击“新建编译任务”按钮创建一个吧~';
+                  }
+              }
+          },
+          url:interface.train.search,
+          domid:'_data_list',
+//          data:{list:0},
+          title:[
+              {
+                title_callback:function(status){
+                  return '收藏';
+                },
+                callback:function(data,status){
+                        return '<a href="#"><i class="iconfont icon-shoucang1" onclick="toggle_collect(this)"></i></a>'
+                },
+                style:'width:50px;'
+              },
+              {
+                  title:'编译任务名称',
+                  callback:function(data){
+                      return '<span><a href="add_train.html?id='+data[1]+'">'+data[0]+'</a></span>'
+                  }
+              },
+              {
+                  title:'模型统计',
+                  callback:function(data){
+                      return '<span>'+data+'</span>'
+                  }
+              },
+              {
+                  title:'模型性能',
+                  callback:function(data){
+                      return data
+                  }
+              },
+              {
+                  title:'编译描述',
+                  callback:function(data){
+                      return data
+                  }
+              },
+              {
+                  title:'性能消耗曲线',
+                  callback:function(data){
+                      return data
+                  }
+              },
+              {
+                  title:'编译状态',
+                  callback:function(data){
+                      return '<a href="javascript:;" d-id="'+data+'" onclick="train_config(this)">查看</a>'
+                  }
+              },
+              {
+                  title:'操作',
+                  callback:function(data){
+                      var html =
+                          '<a href="_blank" d-id="'+data[0]+'">下载</a>／'+
+                          '<a href="javascript:;" d-id="'+data[0]+'" onclick="del_task(this)">demo</a>／'+
+                          '<a href="javascript:;" d-id="'+data[0]+'" onclick="edit_task(this)" name="'+data[2]+'" desc="'+data[3]+'">编辑</a>／'
+
+                      return html
+                  },
+                  style:"width:260px;"
+              }
+          ],
+          datakey:[
+              'Id',
+              ["Task_name","Id"],
+              "Id",
+              "Id",
+              "Id",
+              "Id",
+              "Id",
+              ["Id","Task_status","Task_name","Task_desc"]
+          ],
+          isstatus:{
+              cur:0,
+              domid:'status_id',
+              data:[
+                  {
+                      status:0,
+                      text:'编译任务'
+                  },
+                  {
+                      status:1,
+                      text:'收藏的任务'
+                  }
+              ]
+          }
+      }
+      var _list = datalist(obj)
+      function toggle_collect(node){
+          if(Class.hasClass(node,'icon-shoucang1')){
+              Class.removeClass(node,'icon-shoucang1')
+              Class.addClass(node,'icon-shoucang')
+          }else{
+              Class.removeClass(node,'icon-shoucang')
+              Class.addClass(node,'icon-shoucang1')
+          }
+      }
+
+      function searchdata(){
+          var task_name = document.getElementsByName('task_name')[0].value
+          if(task_name) _list.data.task_key = task_name
+
+          var task_data = document.getElementsByName('task_data')[0].value
+          if(task_data) _list.data.task_key = task_data
+
+          _list.page = 1
+          _list.ajaxpagedata()
+      }
+
+      function show_train_time(){
+          var popup = tool_popup()
+          popup.title = '训练时间'
+          popup.con = '<div id="train_time">'+'</div>'
+          var html = '';
+          popup.show();
+      }
+      function show_train_data(){
+          var popup = tool_popup()
+          popup.title = '数据'
+          popup.con = '<div id="train_data">'+'</div>'
+          var html = '';
+          popup.show();
+      }
+      // 配置
+      function train_config(dom){
+          var id = dom.getAttribute('d-id')
+          getiddata(id,function(data){
+              var popup = tool_popup()
+              popup.title = '训练配置'
+              popup.con = '<div id="train_data">'+g_task_config_html('数据配置',data.data.Data_config)+g_task_config_html('模型配置',data.data.Model_config)+'</div>'
+              popup.show();
+          })
+      }
+      function old_model(){
+
+      }
+      function compare(){
+
+      }
+      function finetune(){
+
+      }
+      function demo(){
+
+      }
+
+      function copy_task(dom){
+          var id = dom.getAttribute('d-id')
+          var text = dom.innerText
+          getiddata(id,function(data){
+              g_add_task(data.data.Task_name+'-'+text+'-'+g_time())
+          })
+      }
+
+      function del_task(dom){
+        var id = dom.getAttribute('d-id')
+        var data = 'task_id='+id+'&task_type=1'
+        walert('确定删除',function(){
+            ajaxpost(interface.train.task_del_status_update,data,function(data){
+                _list.ajaxpagedata()
+            })
+        })
+      }
+
+
+      /*编辑任务名称和描述*/
+      function edit_task(dom){
+          var id = dom.getAttribute('d-id')
+          var name = dom.getAttribute('name');
+          var desc = dom.getAttribute('desc');
+
+          var popup = tool_popup()
+          popup.title = '编辑编译任务'
+          popup.con = '<div id="pop_data_edit">'+'</div>'
+          var html = '';
+          popup.style_popup_con += 'min-height:310px;height:310px;'
+          popup.show();
+          html += '<div class="v input_2 mb10" style="margin-top: 50px;padding-right: 50px;">'
+          html += '<label class="w30">编译任务名称<span style="color:#f00"> *</span> </label>'
+          html += '<input name="" class="text w70" cols="30" rows="6" style="border: 1px solid #ccc;" id="new_task_name" value="'+name+'"/>'
+          html += ' <p class="info pdw30"></p>'
+          html += '</div>'
+          html += '<div class="v input_2 mb10" style="margin-top: 10px;padding-right: 50px;">'
+          html += '<label class="w30">编译任务描述<span style="color:#f00"> *</span> </label>'
+          html += '<textarea name="" class="text w70" cols="30" rows="6" style="border: 1px solid #ccc;" id="new_task_desc" value="'+desc+'"/></textarea>'
+          html += ' <p class="info pdw30"></p>'
+          html += '</div>'
+          document.getElementById('pop_data_edit').innerHTML = html
+          popup.callback = function(){
+              var task_name =document.getElementById('new_task_name').value;
+              var task_desc = document.getElementById('new_task_desc').value;
+              if(task_name ==''){
+                  errorPrompt('名称不能为空');
+                  return;
+              }else if(task_desc ==''){
+                  errorPrompt('描述不能为空');
+                  return;
+              }else{
+                  var datastr = "task_id="+id+"&task_name="+task_name+"&task_desc="+task_desc;
+                  var url = interface.train.name_update
+                  ajaxpost(url,datastr,function(data){
+                      if(data.error ==0){
+                          succPrompt('修改成功');
+                          _list.ajaxpagedata()
+                      }else{
+                          errorPrompt(data['message'])
+                      }
+                  })
+              }
+
+          }
+      }
+
+      function getiddata(id,callback){
+          var data = 'task_id='+id+'&offset=0'
+          ajaxpost(interface.train.search,data,function(data){
+              if(data.error ==0){
+                  callback(data)
+              }else{
+                  alert(data.msg)
+              }
+          })
+      }
+
+      function start_task(dom){
+          var id = dom.getAttribute('d-id')
+          g_start_task(id,function(){
+              _list.ajaxpagedata()
+          })
+      }
+
+  </script>
+
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_4fqxwn7ixpmvlsor.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+    <div class="_main_con_3" id="_main_con_3" style="left: 260px;"></div>
+    <div class="_main_con_4" id="_main_con_4">
+        <div class="cfg_test_data" id="form_vertical"></div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+
+    shownav({
+        oname:'训练',
+        tname:'新建训练'
+    })
+
+    var svg = svgdata({
+        taskdata:{
+            id:100,
+            name:'训练任务1',
+        },
+        domid:'_main_con_3',
+        data:[
+            {
+                id:0,
+                x:250,
+                y:100,
+                text:'选择数据',
+                link:[1],
+                click:'btnfun(this)'
+            },
+            {
+                id:1,
+                x:250,
+                y:200,
+                text:'选择模型',
+                link:[2,3],
+                click:'btnfun(this)'
+            },
+            {
+                id:2,
+                x:110,
+                y:300,
+                text:'配置数据',
+                link:[4],
+                click:'btnfun(this)'
+            },
+            {
+                id:3,
+                x:390,
+                y:300,
+                text:'配置模型',
+                link:[4,8],
+                click:'btnfun(this)'
+            },
+            {
+                id:4,
+                x:250,
+                y:400,
+                text:'开始训练',
+                link:[5,6],
+                click:'btnfun(this)'
+            },
+            {
+                id:5,
+                x:110,
+                y:500,
+                text:'训练过程',
+                link:[7],
+                click:'btnfun(this)'
+            },
+            {
+                id:6,
+                x:390,
+                y:500,
+                text:'评测过程',
+                link:[7],
+                click:'btnfun(this)'
+            },
+            {
+                id:7,
+                x:250,
+                y:600,
+                text:'编译',
+                link:[],
+                click:'btnfun(this)'
+            },
+
+            {
+                id:8,
+                x:650,
+                y:400,
+                text:'自定义配置',
+                link:[9],
+                click:'btnfun(this)'
+            }
+        ]
+    })
+
+    var v_form = data_form();
+    v_form.data = [
+        {
+            desc:'名称',
+            type:"title",
+            name:"keyword",
+            style:'margin-bottom:10px'
+        },
+        {
+            desc:'类型',
+            type:"select",
+            data:[
+                {
+                    key:'0',
+                    text:'volvo'
+                },
+                {
+                    key:'1',
+                    text:'hhhh'
+                },
+                {
+                    key:'2',
+                    text:'dss'
+                },
+                {
+                    key:'3',
+                    text:'fsds'
+                }
+            ],
+            value:'',
+            ph:'',
+            style:'margin:10px 1%;height: 30px;width: 98%;'
+        },
+        {
+            desc:'描述',
+            type:"textarea",
+            style:'margin:10px 1%;height: 200px;width: 96%;border: 1px solid #ccc;padding: 5px 1%;',
+            value:''
+        },
+    ]
+    v_form.datahtml('form_vertical')
+
+    //      function btnfun(dom){
+    //          alert(dom.getAttribute('class'))
+    //          var content = dom.children[2].innerHTML
+    //          var cfa_data = document.getElementsByClassName('cfg_test_data')
+    //          console.log(cfa_data)
+    //          for(var i=0;i<cfa_data.length;i++){
+    //              cfa_data[i].style.display = 'none'
+    //          }
+    //          switch(content){
+    //              case '选择数据':
+    //                  cfa_data[0].style.display = 'block'
+    //                  break
+    //              case '选择模型':
+    //                  cfa_data[1].style.display = 'block'
+    //          }
+    //      }
+
+
+    //      function toggle(e){
+    //          if(!e){
+    //              e = window.event
+    //          }
+    //          var title = e.target
+    //          var el = title.nextSibling;
+    //          if(el.style.display == 'block'){
+    //              el.style.display = "none"
+    //          }else if(el.style.display == 'none'){
+    //              el.style.display = 'block'
+    //          }
+    //      }
+</script>
+
+</html>

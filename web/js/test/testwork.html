@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../../css/vhtml.css" >
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/main_style.css">
+      <link rel="stylesheet" href="../../css/login.css">
+  </head>
+  <body>
+	  <div id="tt" style="position: relative; left: 120px; top: 100px;">
+      </div>
+  </body>
+  <script type="text/javascript" src="../requirefile.js"></script>
+  <script type="text/javascript" src="../components/workflow.js"></script>
+
+  <script type="text/javascript">
+	var data = {
+			data:[
+			  {
+				name:"选择数据",
+				isclick:true,
+				click:function(){
+					console.log("选择数据");
+				}
+			  },
+			  {
+				name:"选择模型",
+				isclick:true,
+				click:function(){
+					console.log("选择模型");
+				}
+			  },
+			  {
+				name:"配置数据",
+				isclick:true,
+				click:function(){
+					console.log("配置数据");
+				}
+			  }
+			],
+			domid: "tt" ,
+			cur: 0
+		}
+	var test_flow = workflow(data);
+	test_flow.toCur(0)
+  </script>
+
+</html>

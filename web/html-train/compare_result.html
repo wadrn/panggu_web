@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+</head>
+<body>
+<div class="_main">
+    <div id="_nav"></div>
+
+    <div class="_main_con_5" id="_data_con">
+
+        <div class="pd20">
+            <div class="mb20">
+                <h4 class="v h bbottom">
+                    <span class="titile" id="_r_title"></span>
+                    <ul class="v breadnav1" id="_r_bnav">
+                        <li><a href="#">首页</a></li>
+                        <li>任务对比结果</li>
+                    </ul>
+                </h4>
+            </div>
+            <div class="bgpd15" id="_data_list" style="overflow-y: auto;height: 700px;"></div>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script type="text/javascript">
+
+    shownav({
+        oname:'训练',
+        tname:'任务对比结果'
+    })
+    var ids = [];
+    ids.push(parseInt(urlfun.getquery('arr').split(',')[0]))
+    ids.push(parseInt(urlfun.getquery('arr').split(',')[1]))
+    var obj ={
+        compare_item:[    //因为需要保持顺序，所以用数组
+
+            {
+                name:"模型信息",
+                type:'cate_name'
+            },
+            {
+                name:'创建时间',
+                type:'run_mile'
+            },
+            {
+                name:'ap值',
+                type:'latest_judge'
+            },
+            {
+                name:'top1准确率',
+                type:'latest_judge'
+            },
+            {
+                name:'pr曲线',
+                type:'id'
+            },
+            {
+                name:'fppi曲线',
+                type:'id'
+            },
+            {
+                name:'训练数据',
+                type:'data_val'
+            },
+            {
+                name:'训练总时长',
+                type:'run_mile'
+            },
+            {
+                name:'数据配置',
+                type:'id'
+            },
+            {
+                name:'模型配置',
+                type:'id'
+            }
+        ],
+        domid:'_data_list',
+        ids:ids,
+        url:interface.train.search
+    }
+    var compare_table = compare_table(obj);
+
+    function go_back(){
+        window.location.href = 'contrast.html'
+    }
+</script>

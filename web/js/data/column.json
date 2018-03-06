@@ -1,0 +1,42 @@
+{
+  "data":{
+    "tp_fp_score":{
+      "series":{
+        "tp":[
+
+        ],
+        "fp":[
+
+        ]
+      },
+      "xAxis":[
+
+      ],
+      "yAxis":{
+        "min":"0",
+        "title":"tp_fp_score"
+      },
+      "type":"column",
+      "column_type":"normal"
+    },
+    "tp_fp_occlusion":{
+      "series":{
+        "tp_occlusion":[
+
+        ],
+        "miss_occlusion":[
+
+        ]
+      },
+      "xAxis":[
+
+      ],
+      "yAxis":{
+        "min":"0",
+        "title":"tp_fp_occlusion"
+      },
+      "type":"column",
+      "column_type":""
+    }
+  }
+}

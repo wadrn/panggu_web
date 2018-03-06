@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>训练平台</title>
+    <link rel="stylesheet" href="../css/vhtml.css" >
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main_style.css">
+    <link rel="stylesheet" href="http://at.alicdn.com/t/font_363477_klcea9i50ij2a9k9.css">
+    <style>
+        #left_nav_container{
+            width:15%;
+            height:100%;
+            margin:20px 50px;
+        }
+        #right_content_container{
+            background: #fff;
+            overflow-y: auto;
+            float: right;
+            width:85%;
+            height:100%;
+        }
+        #left_nav_container ul li{
+            margin-top:10px;
+        }
+        #left_nav_container ul li>ul{
+            margin-left:30px;
+        }
+        #left_nav_container ul .one>a{
+            font: 14px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif;
+        }
+        #left_nav_container a{
+            width:100px;
+            margin-top:15px;
+            color: #008CD6;
+            font: 12px/1.5 Tahoma,Helvetica,Arial,'宋体',sans-serif;
+        }
+        #left_nav_container a:hover{
+            color: rgba(32, 99, 133, 0.993);
+            font-weight: bold;
+        }
+        #left_nav_container a.active{
+            color: rgba(23, 46, 58, 0.993);
+            font-weight: bold;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="_main">
+    <div id="_nav"></div>
+    <div class="_main_con_5" id="_data_con" style="border-top: 1px solid #eee;">
+            <div id="right_content_container">
+                <iframe name="help" width="100%" id="frame_content" onload="this.height = 500" scrolling="yes" frameborder="0" src="intro.html"></iframe>
+            </div>
+            <div id="left_nav_container">
+                <nav>
+                    <ul>
+                        <li class="one"><a href="intro.html" target="help" class="active">快速上手</a></li>
+                        <li class="one">
+                            <button disabled="true" style="border:none;box-shadow:none;background:transparent">训练步骤详细说明</button>
+                            <ul>
+                                <li><a href="select_data.html" target="help" >选择数据</a></li>
+                                <li><a href="select_model.html" target="help" >选择模型</a></li>
+                                <li><a href="config_data.html" target="help" >配置数据</a></li>
+                                <li><a href="config_model.html" target="help" >配置模型</a></li>
+                                <li><a href="network_config.html" target="help" >网络配置</a></li>
+                                <li><a href="train_monitor.html" target="help" >训练监控</a></li>
+                                <li><a href="chart_intro.html" target="help" >评测图表说明</a></li>
+                            </ul>
+                        </li>
+                        <li class="one">
+                            <!-- <a href="javascript:;" target="help" disabled="true">任务管理</a> -->
+                            <button disabled="true" style="border:none;box-shadow:none;background:transparent">任务管理</button>
+                            <ul>
+                                <li><a href="train_task_man.html" target="help" >训练任务管理</a></li>
+                                <li><a href="compile_task_man.html" target="help" >编译任务管理</a></li>
+                                <li><a href="data_man.html" target="help" >数据管理</a></li>
+                                <li><a href="upload_data_intro.html" target="help" >上传数据说明</a></li>
+                                <li><a href="model_man.html" target="help" >模型管理</a></li>
+                            </ul>
+                        </li>
+                        <li class="one"><a href="support.html" target="help" >支持</a></li>
+                    </ul>
+                </nav>
+            </div>
+    </div>
+</div>
+
+
+</body>
+<script type="text/javascript" src="../js/requirefile.js"></script>
+<script>
+    shownav({
+        oname:'帮助',
+        tname:'帮助文档'
+    });
+
+    function reinitIframe(){
+        var iframe = document.getElementById("frame_content");
+        try{
+        var bHeight = iframe.contentWindow.document.body.scrollHeight;
+        var dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+        var height = Math.max(bHeight, dHeight);
+        iframe.height = height;
+        }catch (ex){}
+    }
+    window.setInterval("reinitIframe()", 200);
+    $('a[target="help"]').on('click',function(){
+        $('a[target="help"]').removeClass('active');
+        $(this).addClass('active');
+    })
+</script>
+</html>

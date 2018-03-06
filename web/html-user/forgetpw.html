@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8">
+  	<meta name='viewport' content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui'/>
+  	<meta name='apple-mobile-web-app-capable' content='yes' />
+  	<meta name='format-detection' content='telephone=no'>
+    <>
+    <title>忘记密码</title>
+  </head>
+  <body>
+    <div style="position:absolute; top:0px; right:0px; bottom:0px; left:0px; background:#008bd5; background-size:100% 100%;">
+      <div id="b1" style="height:280px; width:500px; position:absolute; left:50%; top:50%; margin-left:-250px; margin-top:-200px; ">
+        <div style="width:300px; margin:0 auto; padding:20px 0; text-align:center;">
+          <div style=" font-size: 38px; line-height: 50px; color:#fff; position:relative; top:-40px;">忘记密码</div>
+          <div><input type="text" name="username" style="height:30px; padding:4px 10px; border:1px solid #fff; background:#fff; width: 90%; margin: 10px;" placeholder="用户名"/></div>
+          <div style="padding: 30px 10px;"> <button onclick="logininit()" style="height: 40px; padding:4px 10px; border:1px solid #fff; background:none; color: #fff; width: 132px; font-size: 20px; border-radius:4px;">下一步</button> </div>
+          <div style="padding: 0px 10px;"> <a href="login.html" style="height: 40px; padding:4px 10px; border:none; background:none; color: #fff; width: 132px; font-size: 20px; border-radius:4px;">返回登录</a> </div>
+        </div>
+      </div>
+
+      <div id="b2" style="height:240px; width:600px; position:absolute; left:50%; top:50%; margin-left:-300px; margin-top:-200px; background:rgba(0,0,0,.3); border-radius:10px; display:none;">
+        <div class="" style="text-align:center; color:#fff; padding-top:40px;">
+          <p style="font-size:22px; margin-bottom:50px;">已经向你的邮箱<span id="email"></span>发送验证码</p>
+          <a href="javascript:;" onclick="repw()" class="t-btn" style="display: inline-block; height: 44px; line-height: 44px; padding: 0 30px; border: 1px solid #fff; color: #fff; border-radius: 10px; font-size: 18px; text-align: center;">立即重置</a>
+        </div>
+      </div>
+
+      <div id="b3" style="height:280px; width:500px; position:absolute; left:50%; top:50%; margin-left:-250px; margin-top:-200px; display:none;">
+        <div style="width:500px; margin:0 auto; padding:20px 0; text-align:center;">
+          <div style=" font-size: 38px; line-height: 50px; color:#fff; position:relative; top:-40px;">重置密码</div>
+          <div>
+            <label style="display: inline-block; width: 20%; text-align: left; color:#fff;">邮箱验证码</label>
+            <input type="text" name="authcode" style="height:30px; padding:4px 10px; border:1px solid #fff; width: 50%; margin: 10px;" placeholder="">
+          </div>
+          <div>
+            <label>新密码:</label>
+            <input onblur="isPassC()" type="password" name="password" style="height:30px; padding:4px 10px; border:1px solid #fff; width: 50%; margin: 10px;" placeholder="英文字母、数字或符号，区分大小写"/>
+            <div class="register_error_tooltip"></div>
+          </div>
+          <div style="padding: 30px 10px;"> <button onclick="subpw()" style="height: 40px; padding:4px 10px; border:1px solid #fff; background:none; color: #fff; width: 132px; font-size: 20px; border-radius:4px;">提交</button> </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <script type="text/javascript" src="../js/requirefile.js"></script>
+    <script type="text/javascript">
+      function xmlhttppost(url,data,callback){
+        var xmlhttp;
+        if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+          xmlhttp=new XMLHttpRequest();
+        }else{// code for IE6, IE5
+          xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function(){
+          if (xmlhttp.readyState==4 && xmlhttp.status==200){
+            var data = JSON.parse(xmlhttp.responseText)
+            callback(data)
+          }
+        }
+        xmlhttp.open("POST",url,false);
+        xmlhttp.setRequestHeader("content-type","application/x-www-form-urlencoded")
+        xmlhttp.send(data);
+      }
+
+      function logininit(){
+        var url = interface.user.findpwd
+        var user = document.getElementsByName('username')[0].value
+        var datastr = 'user_name='+user+'&step=1'
+        xmlhttppost(url,datastr,function(data){
+          if(data.error == 0){
+            domid('email').innerHTML = data.data.email
+            domid('b1').style.display = 'none'
+            domid('b2').style.display = 'block'
+          }else{
+            alert(data.msg)
+          }
+        })
+      }
+      function repw(){
+        domid('b2').style.display = 'none'
+        domid('b3').style.display = 'block'
+      }
+      function isPassC(){
+          var password = document.getElementsByName('password')[0].value;
+          if(password == ''){
+              document.getElementsByName('password')[0].style.border='red solid 1px'
+              $('input[name="password"] + .register_error_tooltip').html('密码不能为空')
+              $('input[name="password"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else if(password.length <6 || password.length >20){
+              document.getElementsByName('password')[0].style.border='red solid 1px'
+              $('input[name="password"] + .register_error_tooltip').html('密码长度为6到20位')
+              $('input[name="password"] + .register_error_tooltip').css('display','block');
+              return false;
+          }else{
+              var reg = /\w{6,20}/g
+              if(!reg.test(password)){
+                  document.getElementsByName('password')[0].style.border='red solid 1px'
+                  $('input[name="password"] + .register_error_tooltip').html('密码格式不正确')
+                  $('input[name="password"] + .register_error_tooltip').css('display','block');
+                  return false;
+              }else{
+                  document.getElementsByName('password')[0].style.border='#fff solid 1px'
+                  $('input[name="password"] + .register_error_tooltip').html('')
+                  $('input[name="password"] + .register_error_tooltip').css('display','none');
+                  return true;
+              }
+          }
+      }
+      function subpw(){
+          if(!isPassC()){
+              return false;
+          }
+        var url = interface.user.findpwd
+        var user = document.getElementsByName('username')[0].value
+        var authcode = document.getElementsByName('authcode')[0].value
+        var password = document.getElementsByName('password')[0].value
+
+        var datastr = 'user_name='+user+'&step=2'+'&authcode='+authcode+'&password='+password
+        xmlhttppost(url,datastr,function(data){
+          if(data.error == 0){
+            alert('修改成功')
+            window.location.href = 'login.html'
+          }else{
+            alert(data.msg)
+          }
+        })
+      }
+      function domid(id){
+        if(!id) return false
+        return document.getElementById(id)
+      }
+    </script>
+  </body>
+</html>
